@@ -5,6 +5,7 @@ import game_framework
 import game_world
 
 from girl import Girl
+from boss import Boss
 
 girl = None
 
@@ -23,6 +24,10 @@ def init():
 
     girl = Girl()
     game_world.add_object(girl, 1)
+
+    boss = Boss()
+    game_world.add_object(boss, 0)
+
 
 
 def update():
