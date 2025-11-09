@@ -105,3 +105,6 @@ class Girl:
 
     def handle_collision(self, group, other):
         pass
+
+    def get_bb(self):
+        return self.x - 24, self.y - 24, self.x + 24, self.y + 24

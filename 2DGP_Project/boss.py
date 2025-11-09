@@ -45,4 +45,4 @@ class Boss:
 
         missile = Missile(x,500)
         game_world.add_object(missile,1)
-        game_world.add_collision_pair('missile:player', missile, None)
+        game_world.add_collision_pair('missile:girl', missile, None)

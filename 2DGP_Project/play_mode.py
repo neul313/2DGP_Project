@@ -6,6 +6,7 @@ import game_world
 
 from girl import Girl
 from boss import Boss
+from missile import Missile
 
 girl = None
 
@@ -28,7 +29,7 @@ def init():
     boss = Boss()
     game_world.add_object(boss, 0)
 
-
+    game_world.add_collision_pair('missile:girl', None, girl)
 
 def update():
     game_world.update()
