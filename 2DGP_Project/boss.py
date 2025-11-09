@@ -57,4 +57,4 @@ class Boss:
         pass
 
     def hp_min(self, n):
-        pass
+        self.hp -= n
