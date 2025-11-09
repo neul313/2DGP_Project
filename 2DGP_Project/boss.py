@@ -20,7 +20,7 @@ class Boss:
         self.x, self.y = 600, 300
 
         #미사일 타이머
-        self.missile_timer = random.randint(3, 5)
+        self.missile_timer = random.uniform(3.0, 5.0)
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
@@ -28,7 +28,7 @@ class Boss:
 
         if self.missile_timer <= 0:
             self.missle_spawn()
-            self.missile_timer = random.randint(3, 5)
+            self.missile_timer = random.uniform(3.0, 5.0)
 
     def draw(self):
         image = self.image[int(self.frame)]
