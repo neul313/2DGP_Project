@@ -13,7 +13,7 @@ RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 # 액션 시간
-TIME_PER_ACTION = 0.5
+TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
@@ -28,6 +28,8 @@ def left_down(e):
 
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
+
+
 
 class Idle:
     def __init__(self, girl):
@@ -44,9 +46,9 @@ class Idle:
 
     def draw(self):
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * (144//3), 192//4, (144//2), 192//3, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, self.girl.x, self.girl.y)
         else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * (144//3), 192//4, (144//2), 192//3, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 144, 48, 48, self.girl.x, self.girl.y)
 
 
 class Run:
@@ -68,9 +70,9 @@ class Run:
 
     def draw(self):
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * 100, 100, 100, 100, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, self.girl.x, self.girl.y)
         else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * 100, 0, 100, 100, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, self.girl.x, self.girl.y)
 
 
 class Girl:
