@@ -54,13 +54,23 @@ class Run:
         self.girl = girl
 
     def enter(self, e):
-        pass
+        if right_down(e) or left_up(e):
+            self.girl.dir = self.girl.face_dir = 1
+        elif left_down(e) or right_up(e):
+            self.girl.dir = self.girl.face_dir = -1
+
     def exit(self, e):
         pass
     def do(self):
-        pass
+        self.girl.frame = (self.girl.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        self.girl.x += self.girl.dir * RUN_SPEED_PPS * game_framework.frame_time
+
+
     def draw(self):
-        pass
+        if self.girl.face_dir == 1:  # right
+            self.girl.image.clip_draw(int(self.girl.frame) * 100, 100, 100, 100, self.girl.x, self.girl.y)
+        else:  # face_dir == -1: # left
+            self.girl.image.clip_draw(int(self.girl.frame) * 100, 0, 100, 100, self.girl.x, self.girl.y)
 
 
 class Girl:
@@ -71,8 +81,16 @@ class Girl:
         self.image = load_image('girl.png')
 
         self.IDLE = Idle(self)
-        self.state_machine = StateMachine(self.IDLE, {})
-
+        self.RUN = Run(self)
+        self.state_machine = StateMachine(
+            self.IDLE,
+            {
+                self.IDLE: {right_down: self.RUN, left_down: self.RUN,
+                            right_up: self.RUN, left_up: self.RUN},
+                self.RUN: {right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE,
+                           left_down: self.IDLE}
+            }
+        )
     def update(self):
         self.state_machine.update()
 
