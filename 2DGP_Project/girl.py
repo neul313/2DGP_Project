@@ -49,6 +49,20 @@ class Idle:
             self.girl.image.clip_draw(int(self.girl.frame) * (144//3), 192//4, (144//2), 192//3, self.girl.x, self.girl.y)
 
 
+class Run:
+    def __init__(self, girl):
+        self.girl = girl
+
+    def enter(self, e):
+        pass
+    def exit(self, e):
+        pass
+    def do(self):
+        pass
+    def draw(self):
+        pass
+
+
 class Girl:
     def __init__(self):
         self.face_dir = 1
