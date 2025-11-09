@@ -1,6 +1,7 @@
 from pico2d import *
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT
 
+import random
 import game_world
 import game_framework
 from state_machine import StateMachine

@@ -3,6 +3,7 @@ import random
 import math
 import game_framework
 import game_world
+from missile import Missile
 
 TIME_PER_ACTION = 1.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
@@ -40,4 +41,5 @@ class Boss:
         pass
 
     def missle_spawn(self):
-        pass
+        missile = Missile(self.x, self.y)
+        game_world.add_object(missile,1)
