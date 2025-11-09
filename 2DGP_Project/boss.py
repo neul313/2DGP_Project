@@ -4,9 +4,9 @@ import math
 import game_framework
 import game_world
 
-TIME_PER_ACTION = 5.0
+TIME_PER_ACTION = 1.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 10.0
+FRAMES_PER_ACTION = 2.0
 
 class Boss:
     images = None
