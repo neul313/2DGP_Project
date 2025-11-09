@@ -11,7 +11,7 @@ class Missile:
         if self.image is None:
             self.image = load_image('attack.png')
 
-        self.x, self.y = x, y
+        self.x, self.y = x,y
 
 
     def update(self):
@@ -27,4 +27,5 @@ class Missile:
         pass
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'missle:girl':
+            game_world.remove_object(self)

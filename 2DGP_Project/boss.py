@@ -16,7 +16,7 @@ class Boss:
 
     def __init__(self):
         self.image = [load_image('boss1.png'),load_image('boss2.png')]
-        self.frame =0
+        self.frame =0.0
         self.x, self.y = 600, 300
 
         #미사일 타이머
@@ -32,14 +32,17 @@ class Boss:
 
     def draw(self):
         image = self.image[int(self.frame)]
-        image.draw(600, 300, 400,400)
+        image.draw(self.x, self.y, 400,400)
 
-    def handle_event(self):
+    def handle_event(self,e):
         pass
 
-    def handle_collision(self):
+    def handle_collision(self, group, other):
         pass
 
     def missle_spawn(self):
-        missile = Missile(self.x, self.y)
+        x = random.uniform(200,1000)
+
+        missile = Missile(x,500)
         game_world.add_object(missile,1)
+        game_world.add_collision_pair('missile:player', missile, None)
