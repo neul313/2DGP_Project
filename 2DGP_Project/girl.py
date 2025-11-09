@@ -3,6 +3,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT
 
 import game_world
 import game_framework
+from state_machine import StateMachine
 
 # 달리기 시간
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -43,19 +44,29 @@ class Idle:
 
     def draw(self):
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * (144/3), 192/4, (144/2), 192/3, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * (144//3), 192//4, (144//2), 192//3, self.girl.x, self.girl.y)
         else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * (144/3), 192/4, (144/2), 192/3, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * (144//3), 192//4, (144//2), 192//3, self.girl.x, self.girl.y)
 
 
 class Girl:
     def __init__(self):
-        pass
+        self.face_dir = 1
+        self.x, self.y = 400, 90
+        self.frame = 0
+        self.image = load_image('girl.png')
+
+        self.IDLE = Idle(self)
+        self.state_machine = StateMachine(self.IDLE, {})
+
     def update(self):
-        pass
+        self.state_machine.update()
+
     def draw(self):
-        pass
+        self.state_machine.draw()
+
     def handle_event(self, event):
-        pass
+        self.state_machine.handle_state_event(('INPUT', event))
+
     def handle_collision(self, group, other):
         pass
