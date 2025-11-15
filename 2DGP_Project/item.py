@@ -11,7 +11,7 @@ class Item:
         self.x, self.y = x, y
         self.clip_x = cx
         self.clip_y = cy
-        self.size = 20
+        self.size = 15
 
     def update(self):
         pass
@@ -23,7 +23,7 @@ class Item:
         clip_bottom = self.image.h - self.clip_y - self.size
 
         self.image.clip_draw(self.clip_x, clip_bottom, self.size, self.size,
-                            draw_x, draw_y, self.size, self.size)
+                            draw_x, draw_y, 50,50)
 
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
