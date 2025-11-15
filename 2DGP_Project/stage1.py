@@ -2,7 +2,7 @@ from pico2d import *
 
 class Stage1:
     def __init__(self):
-        self.image = load_image('st1.png')
+        self.image = load_image('stage_1.png')
 
         self.canvas_width = 1200
         self.canvas_height = 700
@@ -10,7 +10,7 @@ class Stage1:
         self.image_height = self.image.h
 
         self.window_left = 0
-        self.window_bottom = 50
+        self.window_bottom = 0
 
         self.center_object = None
 
