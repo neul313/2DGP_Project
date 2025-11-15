@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+import play_mode
 
 class Stage1:
     def __init__(self):
