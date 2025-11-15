@@ -6,6 +6,7 @@ import game_world
 
 from girl import Girl
 from boss import Boss
+from stage1 import Stage1
 from missile import Missile
 
 girl = None
@@ -25,6 +26,11 @@ def init():
 
     girl = Girl()
     game_world.add_object(girl, 1)
+
+    stage1 = Stage1()
+    game_world.add_object(stage1, 0)
+
+    stage1.set_center_object(girl)
 
     boss = Boss()
     game_world.add_object(boss, 0)
