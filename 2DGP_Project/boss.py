@@ -11,7 +11,7 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 2.0
 
 class Boss:
-    images = None
+    image = None
     def load_images(self):
         pass
 
@@ -39,6 +39,7 @@ class Boss:
     def draw(self):
         image = self.image[int(self.frame)]
         image.draw(self.x, self.y, 400,400)
+        self.draw_hp()
 
     def handle_event(self,e):
         pass
@@ -53,8 +54,14 @@ class Boss:
         game_world.add_object(missile,1)
         game_world.add_collision_pair('missile:girl', missile, None)
 
-    def hp(self):
-        pass
+    def draw_hp(self):
+        bar_x = 200
+        bar_y = 70
+
+        x=self.x
+        y=self.y + 270
+
+        draw_rectangle(x - bar_x, y , x+bar_x, y + 25)
 
     def hp_min(self, n):
         self.hp -= n
