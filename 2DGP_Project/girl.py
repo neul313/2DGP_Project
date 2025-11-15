@@ -47,9 +47,9 @@ class Idle:
 
     def draw(self):
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, self.girl.x, self.girl.y,100,100)
         else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 144, 48, 48, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 144, 48, 48, self.girl.x, self.girl.y,100,100)
 
 
 class Run:
@@ -71,9 +71,9 @@ class Run:
 
     def draw(self):
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, self.girl.x, self.girl.y,100,100)
         else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, self.girl.x, self.girl.y)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, self.girl.x, self.girl.y,100,100)
 
 
 class Girl:
