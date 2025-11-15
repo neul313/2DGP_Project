@@ -70,7 +70,7 @@ class Run:
     def do(self):
         self.girl.frame = (self.girl.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
         self.girl.x += self.girl.dir * RUN_SPEED_PPS * game_framework.frame_time
-
+        self.girl.x = clamp(25, self.girl.x, 2400 - 30)
 
     def draw(self):
         x = self.girl.x - game_framework.camera_x
@@ -110,7 +110,11 @@ class Girl:
         self.state_machine.handle_state_event(('INPUT', event))
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'missile:girl':
+            print("hit")
+            #game_framework.quit()
+        elif group == 'girl:item':
+            print("item get")
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
