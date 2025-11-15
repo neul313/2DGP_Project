@@ -7,6 +7,7 @@ import game_world
 from girl import Girl
 from boss import Boss
 from stage1 import Stage1
+from item import Item
 from missile import Missile
 
 girl = None
@@ -32,10 +33,18 @@ def init():
 
     stage1.set_center_object(girl)
 
-    boss = Boss()
-    game_world.add_object(boss, 0)
+    game_world.add_collision_pair('girl:item', girl, None)
+
+    item1 = Item(100, 60, 0, 0)
+    game_world.add_object(item1, 1)
+    game_world.add_collision_pair('girl:item', None, item1)
+
+    #boss = Boss()
+    #game_world.add_object(boss, 0)
 
     game_world.add_collision_pair('missile:girl', None, girl)
+
+
 
 def update():
     game_world.update()
