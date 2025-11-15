@@ -16,7 +16,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 # 액션 시간
 TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
+FRAMES_PER_ACTION = 3
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -46,10 +46,13 @@ class Idle:
         self.girl.frame = (self.girl.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
 
     def draw(self):
+        x = self.girl.x - game_framework.camera_x
+        y = self.girl.y - game_framework.camera_y
+
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, self.girl.x, self.girl.y,100,100)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, x, y,100,100)
         else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 144, 48, 48, self.girl.x, self.girl.y,100,100)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 144, 48, 48, x, y,100,100)
 
 
 class Run:
@@ -70,10 +73,13 @@ class Run:
 
 
     def draw(self):
+        x = self.girl.x - game_framework.camera_x
+        y = self.girl.y - game_framework.camera_y
+
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, self.girl.x, self.girl.y,100,100)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, x, y,100,100)
         else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, self.girl.x, self.girl.y,100,100)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, x, y,100,100)
 
 
 class Girl:
@@ -107,4 +113,4 @@ class Girl:
         pass
 
     def get_bb(self):
-        return self.x - 24, self.y - 24, self.x + 24, self.y + 24
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 50

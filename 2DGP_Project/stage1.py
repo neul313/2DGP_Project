@@ -1,4 +1,5 @@
 from pico2d import *
+import game_framework
 
 class Stage1:
     def __init__(self):
@@ -12,22 +13,26 @@ class Stage1:
         self.window_left = 0
         self.window_bottom = 0
 
+        game_framework.camera_x = 0
+        game_framework.camera_y = 0
+
         self.center_object = None
 
 
     def update(self):
         if self.center_object is None:
             return
-        self.window_left = clamp(0,
-                                 int(self.center_object.x) - self.canvas_width // 2,
+        #clamp는 입려으로 들어오는 모든 값들을 [min,max]범위 안으로 조정하는 역할
+        self.window_left = clamp(0, int(self.center_object.x) - self.canvas_width // 2,
                                  self.image_width - self.canvas_width)
 
+        game_framework.camera_x = self.window_left
+        game_framework.camera_y = self.window_bottom
+
+
     def draw(self):
-        self.image.clip_draw_to_origin(
-            self.window_left, self.window_bottom,
-            self.canvas_width, self.canvas_height,
-            0, 0
-        )
+        self.image.clip_draw_to_origin( self.window_left, self.window_bottom,
+            self.canvas_width, self.canvas_height,0, 0)
 
     def get_bb(self):
             pass
