@@ -30,4 +30,7 @@ class Item:
 
     def handle_collision(self, group, other):
         if group == 'girl:item':
-            game_world.remove_object(self)
+            pass
+
+    def collect(self):
+        game_world.remove_object(self)

@@ -88,6 +88,7 @@ class Girl:
         self.x, self.y = 400, 90
         self.frame = 0
         self.image = load_image('girl.png')
+        self.item_collision = None
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -101,12 +102,21 @@ class Girl:
             }
         )
     def update(self):
+        self.item_collision = None
         self.state_machine.update()
 
     def draw(self):
         self.state_machine.draw()
 
     def handle_event(self, event):
+        if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            if self.item_collision:
+                print("get")
+                self.item_collision.collect()
+                self.item_collision = None
+                return
+
+
         self.state_machine.handle_state_event(('INPUT', event))
 
     def handle_collision(self, group, other):
@@ -115,6 +125,7 @@ class Girl:
             #game_framework.quit()
         elif group == 'girl:item':
             print("item get")
+            self.item_collision = other
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
