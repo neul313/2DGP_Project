@@ -149,8 +149,7 @@ class Girl:
                         break  # 카드 찾음
 
                 if card_found:
-                    print("Card found! Unlocking door.")
-
+                    print("Card use.")
                     self.inventory.remove(card_found)
 
                     door.unlock()
@@ -184,6 +183,13 @@ class Girl:
         elif group == 'girl:door':
             print("door open")
             self.door_collision = other
+
+            left, bottom, right, top = other.get_bb()
+            cur_dir = self.dir
+
+            if cur_dir > 0:
+                self.x = left -50
+
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
