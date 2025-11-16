@@ -90,8 +90,8 @@ class Girl:
         self.image = load_image('girl.png')
         self.item_collision = None
 
-        self.hp = 100
-        self.mp = 100
+        self.hp = 80
+        self.mp = 80
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)

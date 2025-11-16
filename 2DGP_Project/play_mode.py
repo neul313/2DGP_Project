@@ -43,8 +43,10 @@ def init():
     #boss = Boss()
     #game_world.add_object(boss, 0)
 
-    HP = Bar()
-    game_world.add_object(HP, 3)
+    hp = Bar('hp')
+    mp = Bar('mp')
+    game_world.add_object(hp, 3)
+    game_world.add_object(mp, 3)
 
     game_world.add_collision_pair('missile:girl', None, girl)
 

@@ -2,27 +2,47 @@ from pico2d import *
 import play_mode
 
 class Bar:
-    def __init__(self):
-        self.image = load_image('hp.png')
+    images = None
+    def __init__(self, bar):
+        self.bar = bar
+
+        if Bar.images == None:
+            Bar.images = {}  # 딕셔너리로 만듦
+
+            for i in range(7):
+                Bar.images[i] = load_image(f'hp_mp/{i + 1}.png')
+
+        self.images = Bar.images
+
         self.x = -50
         self.y = 390
         self.width = 400
         self.height = 400
 
-        self.max_hp=100
-        self.max_mp=100
-        self.current_hp = self.max_hp
-        self.current_mp = self.max_mp
+        if self.bar == 'hp':
+            self.max_hp=80
+            self.current_hp = self.max_hp
+        elif self.bar == 'mp':
+            self.max_mp=80
+            self.current_mp = self.max_mp
+
 
     def draw(self):
-        self.image.clip_draw_to_origin(0, 0, self.image.w, self.image.h,self.x, self.y,self.width, self.height)
+       pass
+
 
     def update(self):
-        if play_mode.girl:
-            # girl.py에 self.hp 정의함
-            if hasattr(play_mode.girl, 'hp'):
-                self.current_hp = play_mode.girl.hp
-        self.current_hp = clamp(0, self.current_hp, self.max_hp)
+        if self.bar == 'hp':
+            if play_mode.girl:
+                if hasattr(play_mode.girl, 'hp'):
+                    self.current_hp = play_mode.girl.hp
+            self.current_hp = clamp(0, self.current_hp, self.max_hp)
+
+        elif self.bar == 'mp':
+            if play_mode.girl:
+                if hasattr(play_mode.girl, 'mp'):
+                    self.current_mp = play_mode.girl.mp
+            self.current_mp = clamp(0, self.current_mp, self.max_mp)
 
     def handle_event(self, event):
         pass
