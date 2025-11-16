@@ -144,3 +144,6 @@ class Girl:
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+
+    def item(self,index):
+        pass

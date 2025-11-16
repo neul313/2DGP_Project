@@ -4,9 +4,9 @@ import game_framework
 
 class Inventory:
     def __init__(self, girl):
-        self.girl = girl  # girl의 인벤토리 정보에 접근하기 위함
-        self.inventory_image = load_image('inven1.png')  # 인벤토리 '배경'
-        self.item_image = load_image('items.png')  # 인벤토리 '아이템'
+        self.girl = girl
+        self.inventory_image = load_image('inven1.png')
+        self.item_image = load_image('items.png')
 
     def update(self):
         pass
