@@ -96,6 +96,8 @@ class Girl:
         self.inventory = []
         self.inventory_size = 2
 
+        self.is_bag = False
+
         self.IDLE = Idle(self)
         self.RUN = Run(self)
         self.state_machine = StateMachine(
@@ -108,7 +110,7 @@ class Girl:
             }
         )
     def update(self):
-        self.item_collision = None
+        #self.item_collision = None
         self.state_machine.update()
 
     def draw(self):
@@ -117,25 +119,35 @@ class Girl:
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if self.item_collision:
-                # 인벤토리에 자리가 있는지 확인
-                if len(self.inventory) < self.inventory_size:
-                    item = self.item_collision
-                    self.inventory.append(item) # 인벤에 아이템 추가
-                    item.collect() #화면상 아이템 제거
 
+                # ❗ 1. 줍는 아이템이 'bag'인지 먼저 확인
+                item = self.item_collision
+                if item.item_type == 'bag':
+                    new_slots = item.value  # 아이템에 저장된 값 (4)
+                    self.inventory_size += new_slots
+                    self.is_bag = True  # ❗ 가방 플래그를 True로 변경
+                    print(f"가방 업그레이드! 인벤토리 크기: {self.inventory_size}")
+
+                    item.collect()  # 가방 월드에서 제거
+                    self.item_collision = None
+                    return  # 'bag'은 인벤에 넣지 않고 종료
+
+                # ❗ 2. 'bag'가 아니면 (hp, mp 등) 인벤토리에 추가
+                if len(self.inventory) < self.inventory_size:
+                    self.inventory.append(item)  # 인벤에 아이템 추가
+                    item.collect()  # 화면상 아이템 제거
                     self.item_collision = None
                 return
 
-        #1번 키로 1번 슬롯 아이템 사용
+            # 1번 키로 1번 슬롯 아이템 사용
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
             self.use_item(0)  # 0번 아이템 사용
             return
 
-        # 2번 키로 2번 슬롯 아이템 사용
+            # 2번 키로 2번 슬롯 아이템 사용
         elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
             self.use_item(1)
             return
-
 
         self.state_machine.handle_state_event(('INPUT', event))
 
@@ -151,9 +163,11 @@ class Girl:
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def use_item(self, index):
-        # 인벤토리에 아이템이 있는지 확인
+        # ❗ 1. 오류가 나던 'bag' 블록 완전 삭제
+
+        # ❗ 2. 인벤토리에서 아이템을 꺼내는 로직만 남김
         if len(self.inventory) > index:
-            #인벤토리에서 아이템을 꺼냄
+            # 인벤토리에서 아이템을 꺼냄
             item_to_use = self.inventory.pop(index)
 
             item_type = item_to_use.item_type
@@ -161,12 +175,12 @@ class Girl:
 
             print(f"Using item from slot {index + 1} ({item_type})")
 
-            # 2. 아이템 효과 적용 (원래 SPACE에 있던 로직)
+            # 아이템 효과 적용
             if item_type == 'hp':
                 self.hp = min(80, self.hp + value)
-
             elif item_type == 'mp':
                 self.mp = min(80, self.mp + value)
+            # ❗ 'bag'는 인벤토리에 들어오지 않으므로, 여기서 bag 관련 로직 삭제
 
         else:
-            print(f"Slot {index + 1} x ") #디버그용
+            print(f"Slot {index + 1} x ")  # 디버그용
