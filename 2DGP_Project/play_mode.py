@@ -45,6 +45,14 @@ def init():
     game_world.add_object(item_bag, 1)
     game_world.add_collision_pair('girl:item', None, item_bag)
 
+    item2 = Item(300, 60, 18, 0, 'hp', 20)
+    game_world.add_object(item2, 1)
+    game_world.add_collision_pair('girl:item', None, item2)
+
+    item_card = Item(150, 60, 0, 18, 'hp', 20)
+    game_world.add_object(item_card, 1)
+    game_world.add_collision_pair('girl:item', None, item_card)
+
     inventory_ui = Inventory(girl)
     game_world.add_object(inventory_ui, 3)
 
