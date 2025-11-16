@@ -112,7 +112,8 @@ class Girl:
             }
         )
     def update(self):
-        #self.item_collision = None
+        self.item_collision = None
+        self.door_collision = None
         self.state_machine.update()
 
     def draw(self):
@@ -120,25 +121,7 @@ class Girl:
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            if self.item_collision:
-                item = self.item_collision
-                if item.item_type == 'bag':
-                    new_slots = item.value  # 아이템에 저장된 값 (4)
-                    self.inventory_size += new_slots
-                    self.is_bag = True
-                    print("인벤토리 증가")
-
-                    item.collect()  # 가방 월드에서 제거
-                    self.item_collision = None
-                    return
-
-                if len(self.inventory) < self.inventory_size:
-                    self.inventory.append(item)  # 인벤에 아이템 추가
-                    item.collect()  # 화면상 아이템 제거
-                    self.item_collision = None
-                return
-
-            elif self.door_collision:
+            if self.door_collision:
                 door = self.door_collision
 
                 # 인벤토리에서 card 아이템 검색
@@ -158,6 +141,26 @@ class Girl:
                     print("lock.")
 
                 return
+
+            elif self.item_collision:
+                item = self.item_collision
+                if item.item_type == 'bag':
+                    new_slots = item.value  # 아이템에 저장된 값 (4)
+                    self.inventory_size += new_slots
+                    self.is_bag = True
+                    print("인벤토리 증가")
+
+                    item.collect()  # 가방 월드에서 제거
+                    self.item_collision = None
+                    return
+
+                if len(self.inventory) < self.inventory_size:
+                    self.inventory.append(item)  # 인벤에 아이템 추가
+                    item.collect()  # 화면상 아이템 제거
+                    self.item_collision = None
+                return
+
+
 
 
         # 1번 키로 1번 슬롯 아이템 사용
@@ -181,14 +184,15 @@ class Girl:
             self.item_collision = other
 
         elif group == 'girl:door':
-            print("door open")
+            print("door close")
             self.door_collision = other
 
             left, bottom, right, top = other.get_bb()
-            cur_dir = self.dir
-
+            cur_dir = self.face_dir
             if cur_dir > 0:
                 self.x = left -50
+            else:
+                self.x = right + 50
 
 
     def get_bb(self):
