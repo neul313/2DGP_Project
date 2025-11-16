@@ -10,6 +10,7 @@ from stage1 import Stage1
 from item import Item
 from missile import Missile
 from HP import Bar
+from inventory import Inventory
 
 girl = None
 
@@ -39,6 +40,9 @@ def init():
     item1 = Item(100, 60, 0, 0, 'hp', 20)
     game_world.add_object(item1, 1)
     game_world.add_collision_pair('girl:item', None, item1)
+
+    inventory_ui = Inventory(girl)
+    game_world.add_object(inventory_ui, 3)
 
     #boss = Boss()
     #game_world.add_object(boss, 0)

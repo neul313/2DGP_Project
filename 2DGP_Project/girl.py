@@ -1,5 +1,5 @@
 from pico2d import *
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, SDLK_6
 
 import random
 import game_world
@@ -92,6 +92,9 @@ class Girl:
 
         self.hp = 40
         self.mp = 80
+
+        self.inventory = []
+        self.inventory_size = 2  # 가방 얻으면 6
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
