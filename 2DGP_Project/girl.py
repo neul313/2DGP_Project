@@ -5,6 +5,7 @@ import random
 import game_world
 import game_framework
 from state_machine import StateMachine
+from door import Door
 
 # 달리기 시간
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -89,6 +90,7 @@ class Girl:
         self.frame = 0
         self.image = load_image('girl.png')
         self.item_collision = None
+        self.door_collision = None
 
         self.hp = 40
         self.mp = 80
@@ -119,32 +121,52 @@ class Girl:
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if self.item_collision:
-
-                # ❗ 1. 줍는 아이템이 'bag'인지 먼저 확인
                 item = self.item_collision
                 if item.item_type == 'bag':
                     new_slots = item.value  # 아이템에 저장된 값 (4)
                     self.inventory_size += new_slots
-                    self.is_bag = True  # ❗ 가방 플래그를 True로 변경
-                    print(f"가방 업그레이드! 인벤토리 크기: {self.inventory_size}")
+                    self.is_bag = True
+                    print("인벤토리 증가")
 
                     item.collect()  # 가방 월드에서 제거
                     self.item_collision = None
-                    return  # 'bag'은 인벤에 넣지 않고 종료
+                    return
 
-                # ❗ 2. 'bag'가 아니면 (hp, mp 등) 인벤토리에 추가
                 if len(self.inventory) < self.inventory_size:
                     self.inventory.append(item)  # 인벤에 아이템 추가
                     item.collect()  # 화면상 아이템 제거
                     self.item_collision = None
                 return
 
-            # 1번 키로 1번 슬롯 아이템 사용
+            elif self.door_collision:
+                door = self.door_collision
+
+                # 인벤토리에서 card 아이템 검색
+                card_found = None
+                for item_in_inventory in self.inventory:
+                    if item_in_inventory.item_type == 'card':
+                        card_found = item_in_inventory
+                        break  # 카드 찾음
+
+                if card_found:
+                    print("Card found! Unlocking door.")
+
+                    self.inventory.remove(card_found)
+
+                    door.unlock()
+                    self.door_collision = None  # 상호작용 완료
+                else:
+                    print("lock.")
+
+                return
+
+
+        # 1번 키로 1번 슬롯 아이템 사용
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
             self.use_item(0)  # 0번 아이템 사용
             return
 
-            # 2번 키로 2번 슬롯 아이템 사용
+        # 2번 키로 2번 슬롯 아이템 사용
         elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
             self.use_item(1)
             return
@@ -159,15 +181,16 @@ class Girl:
             print("item get")
             self.item_collision = other
 
+        elif group == 'girl:door':
+            print("door open")
+            self.door_collision = other
+
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def use_item(self, index):
-        # ❗ 1. 오류가 나던 'bag' 블록 완전 삭제
 
-        # ❗ 2. 인벤토리에서 아이템을 꺼내는 로직만 남김
         if len(self.inventory) > index:
-            # 인벤토리에서 아이템을 꺼냄
             item_to_use = self.inventory.pop(index)
 
             item_type = item_to_use.item_type
@@ -175,12 +198,10 @@ class Girl:
 
             print(f"Using item from slot {index + 1} ({item_type})")
 
-            # 아이템 효과 적용
             if item_type == 'hp':
                 self.hp = min(80, self.hp + value)
             elif item_type == 'mp':
                 self.mp = min(80, self.mp + value)
-            # ❗ 'bag'는 인벤토리에 들어오지 않으므로, 여기서 bag 관련 로직 삭제
 
         else:
             print(f"Slot {index + 1} x ")  # 디버그용

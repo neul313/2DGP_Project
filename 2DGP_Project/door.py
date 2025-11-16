@@ -20,9 +20,9 @@ class Door:
         draw_rectangle(draw_x - 50, draw_y - 50, draw_x +50, draw_y+300)
 
     def get_bb(self):
-        return self.x - 50, self.y - 100, self.x + 50, self.y + 300
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 300
 
-    def handle_collision(self):
+    def handle_collision(self,group, other):
         pass
 
     def unlock(self):
