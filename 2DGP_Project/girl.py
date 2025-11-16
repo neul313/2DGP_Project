@@ -90,6 +90,9 @@ class Girl:
         self.image = load_image('girl.png')
         self.item_collision = None
 
+        self.hp = 100
+        self.mp = 100
+
         self.IDLE = Idle(self)
         self.RUN = Run(self)
         self.state_machine = StateMachine(

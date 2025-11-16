@@ -9,6 +9,7 @@ from boss import Boss
 from stage1 import Stage1
 from item import Item
 from missile import Missile
+from HP import Bar
 
 girl = None
 
@@ -41,6 +42,9 @@ def init():
 
     #boss = Boss()
     #game_world.add_object(boss, 0)
+
+    HP = Bar()
+    game_world.add_object(HP, 3)
 
     game_world.add_collision_pair('missile:girl', None, girl)
 
