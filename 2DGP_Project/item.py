@@ -39,8 +39,20 @@ class Item:
             clip_bottom = self.image.h - self.clip_y - self.size
             self.image.clip_draw(self.clip_x, clip_bottom, self.size, self.size,draw_x+400, draw_y + 50, 50, 50)
 
-    def get_bb(self):
-        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+        if self.item_type == 'bag':
+            center_x = draw_x + 300
+            center_y = draw_y
+            half_w = 40
+            half_h = 40
+            draw_rectangle (center_x - half_w, center_y - half_h, center_x + half_w, center_y + half_h)
+        else:
+            center_x = draw_x + 400
+            center_y = draw_y + 50
+            half_w = 50 / 2
+            half_h = 50 / 2
+            draw_rectangle (center_x - half_w, center_y - half_h, center_x + half_w, center_y + half_h)
+
+
 
     def handle_collision(self, group, other):
         if group == 'girl:item':
@@ -53,8 +65,8 @@ class Item:
         if self.item_type == 'bag':
             center_x = self.x + 300
             center_y = self.y
-            half_w = 130 / 2
-            half_h = 130 / 2
+            half_w = 40
+            half_h = 40
             return center_x - half_w, center_y - half_h, center_x + half_w, center_y + half_h
         else:
             center_x = self.x + 400
