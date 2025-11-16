@@ -36,7 +36,7 @@ def init():
 
     game_world.add_collision_pair('girl:item', girl, None)
 
-    item1 = Item(100, 60, 0, 0)
+    item1 = Item(100, 60, 0, 0, 'hp', 20)
     game_world.add_object(item1, 1)
     game_world.add_collision_pair('girl:item', None, item1)
 

@@ -90,7 +90,7 @@ class Girl:
         self.image = load_image('girl.png')
         self.item_collision = None
 
-        self.hp = 80
+        self.hp = 40
         self.mp = 80
 
         self.IDLE = Idle(self)
@@ -115,6 +115,15 @@ class Girl:
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if self.item_collision:
                 print("get")
+                item_type = self.item_collision.item_type
+                value = self.item_collision.value
+
+                if item_type == 'hp':
+                    self.hp = min(80, self.hp + value)
+
+                elif item_type == 'mp':
+                    self.mp = min(80, self.mp + value)
+
                 self.item_collision.collect()
                 self.item_collision = None
                 return

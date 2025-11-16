@@ -5,7 +5,7 @@ import game_framework
 class Item:
     image = None
 
-    def __init__(self, x, y, cx, cy):
+    def __init__(self, x, y, cx, cy, item_type = 'hp', value = 20):
         if Item.image is None:
             Item.image = load_image('items.png')
         self.x, self.y = x, y
@@ -13,6 +13,8 @@ class Item:
         self.clip_y = cy
         self.size = 15
 
+        self.item_type = item_type
+        self.value = value
     def update(self):
         pass
 
