@@ -94,7 +94,7 @@ class Girl:
         self.mp = 80
 
         self.inventory = []
-        self.inventory_size = 2  # 가방 얻으면 6
+        self.inventory_size = 2
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -117,19 +117,24 @@ class Girl:
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if self.item_collision:
-                print("get")
-                item_type = self.item_collision.item_type
-                value = self.item_collision.value
+                # 인벤토리에 자리가 있는지 확인
+                if len(self.inventory) < self.inventory_size:
+                    item = self.item_collision
+                    self.inventory.append(item) # 인벤에 아이템 추가
+                    item.collect() #화면상 아이템 제거
 
-                if item_type == 'hp':
-                    self.hp = min(80, self.hp + value)
-
-                elif item_type == 'mp':
-                    self.mp = min(80, self.mp + value)
-
-                self.item_collision.collect()
-                self.item_collision = None
+                    self.item_collision = None
                 return
+
+        #1번 키로 1번 슬롯 아이템 사용
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
+            self.use_item(0)  # 0번 아이템 사용
+            return
+
+        # 2번 키로 2번 슬롯 아이템 사용
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
+            self.use_item(1)
+            return
 
 
         self.state_machine.handle_state_event(('INPUT', event))
@@ -145,5 +150,23 @@ class Girl:
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
-    def item(self,index):
-        pass
+    def use_item(self, index):
+        # 인벤토리에 아이템이 있는지 확인
+        if len(self.inventory) > index:
+            #인벤토리에서 아이템을 꺼냄
+            item_to_use = self.inventory.pop(index)
+
+            item_type = item_to_use.item_type
+            value = item_to_use.value
+
+            print(f"Using item from slot {index + 1} ({item_type})")
+
+            # 2. 아이템 효과 적용 (원래 SPACE에 있던 로직)
+            if item_type == 'hp':
+                self.hp = min(80, self.hp + value)
+
+            elif item_type == 'mp':
+                self.mp = min(80, self.mp + value)
+
+        else:
+            print(f"Slot {index + 1} x ") #디버그용

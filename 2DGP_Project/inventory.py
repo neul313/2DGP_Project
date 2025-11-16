@@ -15,10 +15,12 @@ class Inventory:
         self.inventory_image.draw(400, 590)
 
         for i, item in enumerate(self.girl.inventory):
-            draw_x = 50 + i * 60
-            draw_y = 650
+            draw_x = 317
+            draw_y = 645
 
             clip_bottom = self.item_image.h - item.clip_y - item.size
             self.item_image.clip_draw(
                 item.clip_x, clip_bottom, item.size, item.size,
-                draw_x, draw_y, 50, 50 )
+                draw_x, draw_y, 40, 40 )
+
+
