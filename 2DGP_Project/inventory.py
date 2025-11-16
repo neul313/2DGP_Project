@@ -28,6 +28,3 @@ class Inventory:
             self.item_image.clip_draw(
                 item.clip_x, clip_bottom, item.size, item.size,
                 draw_x, draw_y, 40, 40)
-
-
-
