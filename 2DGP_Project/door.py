@@ -8,8 +8,8 @@ class Door:
         self.y = y
         self.door_id = door_id
 
-        self.width = 100
-        self.height = 200
+        self.width = 50
+        self.height = 400
 
     def update(self):
         pass
@@ -17,10 +17,10 @@ class Door:
     def draw(self):
         draw_x = self.x - game_framework.camera_x
         draw_y = self.y - game_framework.camera_y
-        draw_rectangle(draw_x - 50, draw_y - 50, draw_x +50, draw_y+50)
+        draw_rectangle(draw_x - 50, draw_y - 50, draw_x +50, draw_y+300)
 
     def get_bb(self):
-        return self.x - 50, self.y - 100, self.x + 50, self.y + 100
+        return self.x - 50, self.y - 100, self.x + 50, self.y + 300
 
     def handle_collision(self):
         pass

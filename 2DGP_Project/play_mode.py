@@ -11,6 +11,7 @@ from item import Item
 from missile import Missile
 from HP import Bar
 from inventory import Inventory
+from door import Door
 
 girl = None
 
@@ -36,6 +37,13 @@ def init():
     stage1.set_center_object(girl)
 
     game_world.add_collision_pair('girl:item', girl, None)
+
+    door = Door(1020,60,1)
+    game_world.add_object(door, 1)
+    game_world.add_collision_pair('girl:door', girl, door)
+
+
+
 
     item1 = Item(100, 60, 0, 0, 'hp', 20)
     game_world.add_object(item1, 1)
