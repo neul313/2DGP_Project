@@ -42,6 +42,10 @@ def init():
     game_world.add_object(door, 1)
     game_world.add_collision_pair('girl:door', girl, door)
 
+    door2 = Door(1720, 60, 1)
+    game_world.add_object(door2, 1)
+    game_world.add_collision_pair('girl:door', girl, door2)
+
 
 
 
