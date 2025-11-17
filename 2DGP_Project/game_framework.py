@@ -7,6 +7,8 @@ stack = None
 camera_x = 0.0
 camera_y = 0.0
 
+share = {}
+
 def change_mode(mode):
     global stack
     if (len(stack) > 0):

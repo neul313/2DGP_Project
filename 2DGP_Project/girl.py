@@ -139,6 +139,11 @@ class Girl:
 
                     door.unlock()
                     self.door_collision = None  # 상호작용 완료
+
+                    if door.stage:
+                        # 지정되어 있다면, 해당 스테이지로 게임 상태 변경
+                        game_framework.change_mode(door.stage)
+
                 else:
                     print("lock.")
 

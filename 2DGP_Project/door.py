@@ -3,13 +3,15 @@ import game_framework
 import game_world
 
 class Door:
-    def __init__(self,x,y,door_id =1):
+    def __init__(self,x,y,door_id =1,stage = None):
         self.x = x
         self.y = y
         self.door_id = door_id
 
         self.width = 50
         self.height = 400
+
+        self.stage = stage
 
     def update(self):
         pass

@@ -12,8 +12,12 @@ from missile import Missile
 from HP import Bar
 from inventory import Inventory
 from door import Door
+import stage2_mode
 
 girl = None
+inventory_ui = None
+hp = None
+mp = None
 
 def handle_events():
     event_list = get_events()
@@ -23,17 +27,17 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            girl.handle_event(event)
+            game_framework.share['girl'].handle_event(event)
 
 def init():
     global girl
 
     girl = Girl()
+    game_framework.share['girl'] = girl
     game_world.add_object(girl, 1)
 
     stage1 = Stage1()
     game_world.add_object(stage1, 0)
-
     stage1.set_center_object(girl)
 
     game_world.add_collision_pair('girl:item', girl, None)
@@ -46,7 +50,7 @@ def init():
     game_world.add_object(door2, 1)
     game_world.add_collision_pair('girl:door', girl, door2)
 
-    door3 = Door(2300, 60, 1)
+    door3 = Door(2300, 60, 1, stage2_mode)
     game_world.add_object(door3, 1)
     game_world.add_collision_pair('girl:door', girl, door3)
 
@@ -84,6 +88,7 @@ def init():
     game_world.add_collision_pair('girl:item', None, item_sparkle2)
 
     inventory_ui = Inventory(girl)
+    game_framework.share['inventory_ui'] = inventory_ui
     game_world.add_object(inventory_ui, 3)
 
     #boss = Boss()
@@ -91,6 +96,8 @@ def init():
 
     hp = Bar('hp')
     mp = Bar('mp')
+    game_framework.share['hp'] = hp
+    game_framework.share['mp'] = mp
     game_world.add_object(hp, 3)
     game_world.add_object(mp, 3)
 
@@ -109,7 +116,8 @@ def draw():
 
 
 def finish():
-    game_world.clear()
+    #game_world.clear()
+    pass
 
 def pause(): pass
 def resume(): pass
