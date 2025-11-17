@@ -6,6 +6,7 @@ import game_world
 import game_framework
 from state_machine import StateMachine
 from door import Door
+from item import Item
 
 # 달리기 시간
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -86,7 +87,7 @@ class Run:
 class Girl:
     def __init__(self):
         self.face_dir = 1
-        self.x, self.y = 400, 90
+        self.x, self.y = 50, 90
         self.frame = 0
         self.image = load_image('girl.png')
         self.item_collision = None
@@ -154,14 +155,25 @@ class Girl:
                     self.item_collision = None
                     return
 
+                if item.item_type == 'sparkle':
+                    if len(self.inventory) < self.inventory_size:
+                        print("반짝이")
+
+                        item.collect()
+                        self.item_collision = None
+
+                        # 새로운 'card' 아이템을 생성하여 인벤토리에 추가
+                        new_card = Item(0, 0, 0, 16, 'card', 20)
+                        self.inventory.append(new_card)
+                    else:
+                        print("인벤토리가 가득 참.")
+                    return
+
                 if len(self.inventory) < self.inventory_size:
-                    self.inventory.append(item)  # 인벤에 아이템 추가
-                    item.collect()  # 화면상 아이템 제거
+                    self.inventory.append(item)
+                    item.collect()
                     self.item_collision = None
                 return
-
-
-
 
         # 1번 키로 1번 슬롯 아이템 사용
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
@@ -180,7 +192,7 @@ class Girl:
             print("hit")
             #game_framework.quit()
         elif group == 'girl:item':
-            print("item get")
+            #print("item get")
             self.item_collision = other
 
         elif group == 'girl:door':

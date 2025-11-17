@@ -45,21 +45,25 @@ def init():
 
 
 
-    item1 = Item(100, 60, 0, 0, 'hp', 20)
+    item1 = Item(600, 60, 0, 0, 'hp', 20)
     game_world.add_object(item1, 1)
     game_world.add_collision_pair('girl:item', None, item1)
 
-    item_bag = Item(150,60,30,0,'bag',4)
+    item_bag = Item(450,60,30,0,'bag',4)
     game_world.add_object(item_bag, 1)
     game_world.add_collision_pair('girl:item', None, item_bag)
 
-    item2 = Item(300, 60, 18, 0, 'hp', 20)
+    item2 = Item(1500, 60, 18, 0, 'hp', 20)
     game_world.add_object(item2, 1)
     game_world.add_collision_pair('girl:item', None, item2)
 
-    item_card = Item(200, 60, 0, 18, 'card', 20)
-    game_world.add_object(item_card, 1)
-    game_world.add_collision_pair('girl:item', None, item_card)
+    # item_card = Item(300, 60, 0, 16, 'card', 20)
+    # game_world.add_object(item_card, 1)
+    # game_world.add_collision_pair('girl:item', None, item_card)
+
+    item_sparkle = Item(180, 80, 0, 0, 'sparkle', 20)
+    game_world.add_object(item_sparkle, 1)
+    game_world.add_collision_pair('girl:item', None, item_sparkle)
 
     inventory_ui = Inventory(girl)
     game_world.add_object(inventory_ui, 3)

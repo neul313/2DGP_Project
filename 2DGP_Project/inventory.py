@@ -16,12 +16,12 @@ class Inventory:
     def draw(self):
         if self.girl.is_bag:
             self.inven1.draw(400, 590)
-            self.inven2.draw(400, 580)
+            self.inven2.draw(530, 654)
         else:
             self.inven1.draw(400, 590)
 
         for i, item in enumerate(self.girl.inventory):
-            draw_x = 317 + i * 60
+            draw_x = 317 + i * 67
             draw_y = 645
 
             clip_bottom = self.item_image.h - item.clip_y - item.size
