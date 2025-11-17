@@ -213,8 +213,12 @@ class Girl:
     def use_item(self, index):
 
         if len(self.inventory) > index:
-            item_to_use = self.inventory.pop(index)
+            item_to_check = self.inventory[index]
 
+            if item_to_check.item_type == 'card':
+                return
+
+            item_to_use = self.inventory.pop(index)
             item_type = item_to_use.item_type
             value = item_to_use.value
 
