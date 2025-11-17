@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+from item import Item
 
 
 class Inventory:
@@ -24,7 +25,11 @@ class Inventory:
             draw_x = 317 + i * 67
             draw_y = 645
 
-            clip_bottom = self.item_image.h - item.clip_y - item.size
-            self.item_image.clip_draw(
-                item.clip_x, clip_bottom, item.size, item.size,
-                draw_x, draw_y, 40, 40)
+            if item.item_type == 'clothes':
+                Item.cloth.draw(draw_x, draw_y, 60, 60)
+
+            else:
+                clip_bottom = self.item_image.h - item.clip_y - item.size
+                self.item_image.clip_draw(
+                    item.clip_x, clip_bottom, item.size, item.size,
+                    draw_x, draw_y, 40, 40)

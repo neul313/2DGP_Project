@@ -155,7 +155,7 @@ class Girl:
                     self.item_collision = None
                     return
 
-                if item.item_type == 'sparkle':
+                if item.item_type == 'card':
                     if len(self.inventory) < self.inventory_size:
                         print("반짝이")
 
@@ -165,9 +165,22 @@ class Girl:
                         # 새로운 'card' 아이템을 생성하여 인벤토리에 추가
                         new_card = Item(0, 0, 0, 16, 'card', 20)
                         self.inventory.append(new_card)
+                        return
                     else:
-                        print("인벤토리가 가득 참.")
-                    return
+                        return
+
+                elif item.item_type == 'clothes':
+                    if len(self.inventory) < self.inventory_size:
+                        print("반짝이")
+
+                        item.collect()
+                        self.item_collision = None
+
+                        new_cloth = Item(0, 0, 0, 0, 'clothes', 20)
+                        self.inventory.append(new_cloth)
+                        return
+                    else:
+                        return
 
                 if len(self.inventory) < self.inventory_size:
                     self.inventory.append(item)
@@ -215,14 +228,14 @@ class Girl:
         if len(self.inventory) > index:
             item_to_check = self.inventory[index]
 
-            if item_to_check.item_type == 'card':
+            if item_to_check.item_type == 'card' or item_to_check.item_type == 'clothes':
                 return
 
             item_to_use = self.inventory.pop(index)
             item_type = item_to_use.item_type
             value = item_to_use.value
 
-            print(f"Using item from slot {index + 1} ({item_type})")
+            print(f"Using item slot {index + 1} ({item_type})")
 
             if item_type == 'hp':
                 self.hp = min(80, self.hp + value)
