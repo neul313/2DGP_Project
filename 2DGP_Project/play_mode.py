@@ -69,6 +69,10 @@ def init():
     game_world.add_object(item_sparkle, 1)
     game_world.add_collision_pair('girl:item', None, item_sparkle)
 
+    item_sparkle3 = Item(1200, 80, 0, 0, 'card', 20)
+    game_world.add_object(item_sparkle3, 1)
+    game_world.add_collision_pair('girl:item', None, item_sparkle3)
+
     item_sparkle2 = Item(180, 80, 0, 0, 'clothes', 20)
     game_world.add_object(item_sparkle2, 1)
     game_world.add_collision_pair('girl:item', None, item_sparkle2)
