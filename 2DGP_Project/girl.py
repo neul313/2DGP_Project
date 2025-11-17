@@ -128,7 +128,7 @@ class Girl:
                 # 인벤토리에서 card 아이템 검색
                 card_found = None
                 for item_in_inventory in self.inventory:
-                    if item_in_inventory.item_type == 'card':
+                    if item_in_inventory.item_type == 'card' or item_in_inventory.item_type == 'card_purple':
                         card_found = item_in_inventory
                         break  # 카드 찾음
 
@@ -164,6 +164,19 @@ class Girl:
 
                         # 새로운 'card' 아이템을 생성하여 인벤토리에 추가
                         new_card = Item(0, 0, 0, 16, 'card', 20)
+                        self.inventory.append(new_card)
+                        return
+                    else:
+                        return
+
+                elif item.item_type == 'card_purple':
+                    if len(self.inventory) < self.inventory_size:
+                        print("반짝이")
+                        item.collect()
+                        self.item_collision = None
+
+                        new_card = Item(0, 0, 16, 16, 'card_purple', 20)  # 👈 (예시: 16, 16으로 수정)
+
                         self.inventory.append(new_card)
                         return
                     else:
@@ -228,7 +241,7 @@ class Girl:
         if len(self.inventory) > index:
             item_to_check = self.inventory[index]
 
-            if item_to_check.item_type == 'card' or item_to_check.item_type == 'clothes':
+            if item_to_check.item_type == 'card' or item_to_check.item_type == 'clothes' or item_to_check.item_type == 'card_purple':
                 return
 
             item_to_use = self.inventory.pop(index)
