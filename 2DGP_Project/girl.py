@@ -114,7 +114,7 @@ class Girl:
         )
     def update(self):
         self.item_collision = None
-        self.door_collision = None
+        #self.door_collision = None
         self.state_machine.update()
 
     def draw(self):
@@ -122,7 +122,7 @@ class Girl:
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            if self.door_collision:
+            if self.door_collision and abs(self.x - self.door_collision.x) < 110:
                 door = self.door_collision
 
                 # 인벤토리에서 card 아이템 검색
@@ -181,7 +181,7 @@ class Girl:
                         item.collect()
                         self.item_collision = None
 
-                        new_card = Item(0, 0, 16, 16, 'card_purple', 20)  # 👈 (예시: 16, 16으로 수정)
+                        new_card = Item(0, 0, 16, 16, 'card_purple', 20)
 
                         self.inventory.append(new_card)
                         return
@@ -194,7 +194,7 @@ class Girl:
                         item.collect()
                         self.item_collision = None
 
-                        new_card = Item(0, 0, 32, 16, 'card_ora', 20)  # 👈 (예시: 16, 16으로 수정)
+                        new_card = Item(0, 0, 32, 16, 'card_ora', 20)
 
                         self.inventory.append(new_card)
                         return

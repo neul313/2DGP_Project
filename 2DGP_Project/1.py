@@ -9,6 +9,3 @@ close_canvas()
 
 
 
-
-
-
