@@ -29,6 +29,17 @@ def init():
 
     global girl
     game_world.clear()
+
+    if 'girl' not in game_framework.share:
+        girl = Girl()
+        game_framework.share['girl'] = girl
+        inv = Inventory(girl)
+        game_framework.share['inventory_ui'] = inv
+
+        hp = Bar('hp')
+        mp = Bar('mp')
+        game_framework.share['hp'] = hp
+        game_framework.share['mp'] = mp
     girl = game_framework.share['girl']
 
     girl.x, girl.y = 50, 230
