@@ -46,6 +46,10 @@ def init():
     game_world.add_collision_pair('missile:girl', None, girl)
     game_world.add_collision_pair('girl:door', girl, None)
 
+    item_star = Item(300, 250, 0, 0, 'star', 10)
+    game_world.add_object(item_star, 1)
+    game_world.add_collision_pair('girl:item', None, item_star)
+
 def update():
     game_world.update()
     game_world.handle_collisions()

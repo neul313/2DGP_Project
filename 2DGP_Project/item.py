@@ -36,7 +36,8 @@ class Item:
         if self.item_type == 'bag':
             self.image = Item.bag
         elif (self.item_type == 'card' or self.item_type == 'clothes'
-              or self.item_type == 'card_purple' or self.item_type == 'card_ora'):
+              or self.item_type == 'card_purple' or self.item_type == 'card_ora'
+              or self.item_type == 'star'):
             self.image = Item.sparkle
             self.frame = 0
             self.max_frame = 3
@@ -47,7 +48,8 @@ class Item:
 
     def update(self):
         if (self.item_type == 'card' or self.item_type == 'clothes'
-              or self.item_type == 'card_purple' or self.item_type == 'card_ora'):
+              or self.item_type == 'card_purple' or self.item_type == 'card_ora'
+        or self.item_type == 'star'):
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.max_frame
 
     def draw(self):
@@ -57,7 +59,8 @@ class Item:
         if self.item_type == 'bag':
             self.image.draw(draw_x, draw_y, 130, 130)
 
-        elif self.item_type == 'card' or self.item_type == 'card_purple' or self.item_type == 'card_ora':
+        elif (self.item_type == 'card' or self.item_type == 'card_purple'
+              or self.item_type == 'card_ora' or self.item_type == 'star'):
             self.image.clip_draw(int(self.frame) * self.f_w, 0, self.f_w, self.f_h,
                                  draw_x, draw_y, 130, 90)
 

@@ -213,6 +213,17 @@ class Girl:
                         return
                     else:
                         return
+                elif item.item_type == 'star':
+                    if len(self.inventory) < self.inventory_size:
+                        print("반짝이")
+                        item.collect()
+                        self.item_collision = None
+                        new_star = Item(0, 0, 32, 16, 'star', 10)
+                        self.inventory.append(new_star)
+                        return
+                    else:
+                        print("인벤토리 가득 참")
+                        return
 
                 if len(self.inventory) < self.inventory_size:
                     self.inventory.append(item)
@@ -261,7 +272,9 @@ class Girl:
             item_to_check = self.inventory[index]
 
             if (item_to_check.item_type == 'card' or item_to_check.item_type == 'clothes'
-                    or item_to_check.item_type == 'card_purple'or item_to_check.item_type == 'card_ora'):
+                    or item_to_check.item_type == 'card_purple'
+                    or item_to_check.item_type == 'card_ora'
+                    or item_to_check.item_type == 'star'):
                 return
 
             item_to_use = self.inventory.pop(index)
