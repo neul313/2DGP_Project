@@ -44,12 +44,18 @@ def init():
         game_framework.share['mp'] = mp
     girl = game_framework.share['girl']
 
-
     girl.x, girl.y = 50, 230
     game_world.add_object(girl, 1)
 
     stage2_background = Stage2()
     game_world.add_object(stage2_background, 0)
+    game_framework.share['background'] = stage2_background
+
+    stage2_background.set_center_object(girl)
+
+    stage2_background = Stage2()
+    game_world.add_object(stage2_background, 0)
+    game_framework.share['background'] = stage2_background
     stage2_background.set_center_object(girl)
 
     game_world.add_object(game_framework.share['inventory_ui'], 3)
@@ -60,14 +66,22 @@ def init():
     game_world.add_collision_pair('missile:girl', None, girl)
     game_world.add_collision_pair('girl:door', girl, None)
 
-    item_star = Item(300, 250, 0, 0, 'star', 10)
-    game_world.add_object(item_star, 1)
-    game_world.add_collision_pair('girl:item', None, item_star)
+    item_gun = Item(555, 270, 0, 0, 'star', 10)
+    game_world.add_object(item_gun, 1)
+    game_world.add_collision_pair('girl:item', None, item_gun)
 
-    door_bridge = Door(1500,230,2,None)
+    door_bridge = Door(1000,230,2,None)
     game_world.add_object(door_bridge, 1)
 
+    door_bridge2= Door(1500, 230, 2, None)
+    game_world.add_object(door_bridge2, 1)
+
+    door_bridge3 = Door(1600, 230, 2, None)
+    game_world.add_object(door_bridge3, 1)
+
     game_world.add_collision_pair('girl:door', girl, door_bridge)
+    game_world.add_collision_pair('girl:door', girl, door_bridge2)
+    game_world.add_collision_pair('girl:door', girl, door_bridge3)
 
     board = Item(250, 220, 0, 0, 'board', 0)
     game_world.add_object(board, 1)
@@ -80,12 +94,6 @@ def init():
     board3 = Item(800, 220, 0, 0, 'board', 0)
     game_world.add_object(board3, 1)
     game_world.add_collision_pair('girl:item', None, board3)
-
-    stage2_bg = Stage2()
-    game_world.add_object(stage2_bg, 0)
-    game_framework.share['background'] = stage2_bg
-
-    stage2_bg.set_center_object(girl)
 
 
 def update():
