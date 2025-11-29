@@ -4,7 +4,11 @@ import play_mode
 
 class Stage2:
     def __init__(self):
-        self.image = load_image('stage2/stage2_first.png')
+        self.images = ['stage2/stage2_1.png','stage2/stage2_2.png',
+                       'stage2/stage2_3.png','stage2/stage2_4.png',]
+        self.images_index = 0
+
+        self.image = load_image(self.images[self.images_index])
 
         self.canvas_width = 1200
         self.canvas_height = 700
@@ -18,6 +22,18 @@ class Stage2:
         game_framework.camera_y = 0
 
         self.center_object = None
+
+    def change_background(self):
+        # 인덱스를 1 증가 (다음 번호로)
+        self.images_index += 1
+
+        # 준비된 이미지 개수보다 작을 때만 변경 (에러 방지)
+        if self.images_index < len(self.images):
+            # 새로운 이미지 로딩
+            self.image = load_image(self.images[self.images_index])
+            print(f"배경 변경됨: {self.images[self.images_index]}")
+        else:
+            print("더 이상 바꿀 배경이 없습니다.")
 
 
     def update(self):

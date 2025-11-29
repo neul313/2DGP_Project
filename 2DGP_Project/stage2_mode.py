@@ -44,6 +44,7 @@ def init():
         game_framework.share['mp'] = mp
     girl = game_framework.share['girl']
 
+
     girl.x, girl.y = 50, 230
     game_world.add_object(girl, 1)
 
@@ -79,6 +80,12 @@ def init():
     board3 = Item(800, 220, 0, 0, 'board', 0)
     game_world.add_object(board3, 1)
     game_world.add_collision_pair('girl:item', None, board3)
+
+    stage2_bg = Stage2()
+    game_world.add_object(stage2_bg, 0)
+    game_framework.share['background'] = stage2_bg
+
+    stage2_bg.set_center_object(girl)
 
 
 def update():

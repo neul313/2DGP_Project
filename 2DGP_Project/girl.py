@@ -144,6 +144,11 @@ class Girl:
                     door.unlock()  # 문 열기
                     self.door_collision = None  # 상호작용 종료
 
+                    #문?을 열면 배경이 바뀜.
+                    if 'background' in game_framework.share:
+                        game_framework.share['background'].change_background()
+                        print("배경 변경")
+
                     # 다음 스테이지로 이동
                     if door.stage:
                         game_framework.change_mode(door.stage)
