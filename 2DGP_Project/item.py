@@ -76,7 +76,7 @@ class Item:
             self.image.clip_draw(int(self.frame) * self.f_w, 0, self.f_w, self.f_h,
                                  draw_x, draw_y, 130, 90)
         elif self.item_type == 'board':
-            self.image.draw(draw_x, draw_y, 80, 80)
+            self.image.draw(draw_x, draw_y, 150, 150)
         else:
             clip_bottom = self.image.h - self.clip_y - self.size
             self.image.clip_draw(self.clip_x, clip_bottom, self.size, self.size,draw_x, draw_y, 50, 50)
