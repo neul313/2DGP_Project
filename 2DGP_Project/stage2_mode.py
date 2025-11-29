@@ -11,6 +11,7 @@ from door import Door
 from HP import Bar
 
 girl = None
+door_bridge = None
 
 def handle_events():
     event_list = get_events()
@@ -28,6 +29,7 @@ def init():
     import play_mode
 
     global girl
+    global door_bridge
     game_world.clear()
 
     if 'girl' not in game_framework.share:
@@ -60,6 +62,11 @@ def init():
     item_star = Item(300, 250, 0, 0, 'star', 10)
     game_world.add_object(item_star, 1)
     game_world.add_collision_pair('girl:item', None, item_star)
+
+    door_bridge = Door(400,230,2,None)
+    game_world.add_object(door_bridge, 1)
+
+    game_world.add_collision_pair('girl:door', girl, door_bridge)
 
 def update():
     game_world.update()

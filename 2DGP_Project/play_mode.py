@@ -14,6 +14,7 @@ from inventory import Inventory
 from door import Door
 import stage2_mode
 
+
 girl = None
 inventory_ui = None
 hp = None
