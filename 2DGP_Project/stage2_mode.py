@@ -68,9 +68,18 @@ def init():
 
     game_world.add_collision_pair('girl:door', girl, door_bridge)
 
-    board = Item(500, 250, 0, 0, 'board', 0)
+    board = Item(250, 220, 0, 0, 'board', 0)
     game_world.add_object(board, 1)
     game_world.add_collision_pair('girl:item', None, board)
+
+    board2 = Item(880, 220, 0, 0, 'board', 0)
+    game_world.add_object(board2, 1)
+    game_world.add_collision_pair('girl:item', None, board2)
+
+    board3 = Item(800, 220, 0, 0, 'board', 0)
+    game_world.add_object(board3, 1)
+    game_world.add_collision_pair('girl:item', None, board3)
+
 
 def update():
     game_world.update()
