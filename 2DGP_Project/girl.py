@@ -188,11 +188,11 @@ class Girl:
                         self.inventory.append(item)
                     else:
                         self.inventory.append(item)
+
+                    item.collect()
+                    self.item_collision = None
                 else:
                     print("인벤토리 가득 참")
-
-                item.collect()
-                self.item_collision = None
 
                 return
 
