@@ -27,6 +27,8 @@ class Inventory:
 
             if item.item_type == 'clothes':
                 Item.cloth.draw(draw_x, draw_y, 60, 60)
+            elif item.item_type == 'board':
+                Item.board.draw(draw_x, draw_y, 50, 40)
 
             else:
                 clip_bottom = self.item_image.h - item.clip_y - item.size
