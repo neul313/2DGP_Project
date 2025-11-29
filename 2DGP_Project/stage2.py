@@ -4,7 +4,7 @@ import play_mode
 
 class Stage2:
     def __init__(self):
-        self.image = load_image('stage2.png')
+        self.image = load_image('stage2/stage2_first.png')
 
         self.canvas_width = 1200
         self.canvas_height = 700
