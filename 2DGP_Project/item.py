@@ -11,6 +11,7 @@ class Item:
     bag  = None
     sparkle = None
     cloth = None
+    board = None
 
     def __init__(self, x, y, cx, cy, item_type = 'hp', value = 20):
         if Item.image is None:
@@ -25,6 +26,9 @@ class Item:
         if Item.cloth is None:
             Item.cloth = load_image('item/패딩.png')
 
+        if Item.board is None:
+            Item.board = load_image('board.png')
+
         self.x, self.y = x, y
         self.clip_x = cx
         self.clip_y = cy
@@ -35,6 +39,10 @@ class Item:
 
         if self.item_type == 'bag':
             self.image = Item.bag
+
+        elif self.item_type == 'board':
+            self.image = Item.board
+
         elif (self.item_type == 'card' or self.item_type == 'clothes'
               or self.item_type == 'card_purple' or self.item_type == 'card_ora'
               or self.item_type == 'star'):
@@ -67,9 +75,13 @@ class Item:
         elif self.item_type == 'clothes':
             self.image.clip_draw(int(self.frame) * self.f_w, 0, self.f_w, self.f_h,
                                  draw_x, draw_y, 130, 90)
+        elif self.item_type == 'board':
+            self.image.draw(draw_x, draw_y, 80, 80)
         else:
             clip_bottom = self.image.h - self.clip_y - self.size
             self.image.clip_draw(self.clip_x, clip_bottom, self.size, self.size,draw_x, draw_y, 50, 50)
+
+
 
         if self.item_type == 'bag':
             center_x = draw_x

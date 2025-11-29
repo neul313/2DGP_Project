@@ -63,10 +63,14 @@ def init():
     game_world.add_object(item_star, 1)
     game_world.add_collision_pair('girl:item', None, item_star)
 
-    door_bridge = Door(400,230,2,None)
+    door_bridge = Door(1500,230,2,None)
     game_world.add_object(door_bridge, 1)
 
     game_world.add_collision_pair('girl:door', girl, door_bridge)
+
+    board = Item(500, 250, 0, 0, 'board', 0)
+    game_world.add_object(board, 1)
+    game_world.add_collision_pair('girl:item', None, board)
 
 def update():
     game_world.update()

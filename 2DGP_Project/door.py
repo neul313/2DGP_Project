@@ -2,7 +2,6 @@ from pico2d import *
 import game_framework
 import game_world
 
-
 class Door:
     def __init__(self,x,y,door_id =1,stage = None):
         self.x = x

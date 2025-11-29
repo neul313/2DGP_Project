@@ -124,30 +124,31 @@ class Girl:
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if self.door_collision and abs(self.x - self.door_collision.x) < 110:
                 door = self.door_collision
-
-                # 인벤토리에서 card 아이템 검색
-                card_found = None
-                for item_in_inventory in self.inventory:
-                    if (item_in_inventory.item_type == 'card' or item_in_inventory.item_type == 'card_purple'
-                            or item_in_inventory.item_type == 'card_ora'):
-                        card_found = item_in_inventory
-                        break  # 카드 찾음
-
-                if card_found:
-                    print("Card use.")
-                    self.inventory.remove(card_found)
-
-                    door.unlock()
-                    self.door_collision = None  # 상호작용 완료
-
-                    if door.stage:
-                        # 지정되어 있다면, 해당 스테이지로 게임 상태 변경
-                        game_framework.change_mode(door.stage)
-
+                target_item = None
+                #2스테이지 로직
+                if door.door_id == 2:
+                    for item in self.inventory:
+                        if item.item_type == 'board':
+                            target_item = item
+                            break
                 else:
-                    print("lock.")
+                    #1스테이지 로직
+                    for item in self.inventory:
+                        if (item.item_type == 'card' or item.item_type == 'card_purple'
+                                or item.item_type == 'card_ora'):
+                            target_item = item
+                            break
+                if target_item:
+                    print(f"아이템 사용: {target_item.item_type}")
+                    self.inventory.remove(target_item)  # 아이템 사용
+                    door.unlock()  # 문 열기
+                    self.door_collision = None  # 상호작용 종료
 
-                return
+                    # 다음 스테이지로 이동
+                    if door.stage:
+                        game_framework.change_mode(door.stage)
+                else:
+                    print("필요한 아이템 없음")
 
             elif self.item_collision:
                 item = self.item_collision
@@ -274,7 +275,8 @@ class Girl:
             if (item_to_check.item_type == 'card' or item_to_check.item_type == 'clothes'
                     or item_to_check.item_type == 'card_purple'
                     or item_to_check.item_type == 'card_ora'
-                    or item_to_check.item_type == 'star'):
+                    or item_to_check.item_type == 'star'
+                    or item_to_check.item_type == 'board'):
                 return
 
             item_to_use = self.inventory.pop(index)
