@@ -21,10 +21,10 @@ class Tang:
 
     def draw(self):
         Tang.image.draw(self.x - game_framework.camera_x,
-                        self.y - game_framework.camera_y, 15, 15)
+                        self.y - game_framework.camera_y, 30, 30)
 
     def get_bb(self):
-        return self.x - 7, self.y - 7, self.x + 7, self.y + 7
+        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
 
 
     def handle_collision(self, group, other):
