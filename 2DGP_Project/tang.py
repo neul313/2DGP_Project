@@ -2,6 +2,7 @@ from pico2d import *
 import game_world
 import game_framework
 
+TANG_SPEED_PPS = 500
 
 class Tang:
     image = None
@@ -10,16 +11,22 @@ class Tang:
         if Tang.image is None:
             Tang.image = load_image('tang.png')  # 총알 이미지 파일 필요
         self.x, self.y = x, y
+        self.hit = hit
 
 
     def update(self):
-       pass
+       self.x+=self.hit * game_framework.frame_time
+       if self.x < 0 or self.x > 2500 :
+           game_world.remove_object(self)
 
     def draw(self):
-        pass
+        Tang.image.draw(self.x - game_framework.camera_x,
+                        self.y - game_framework.camera_y, 15, 15)
+
     def get_bb(self):
-        pass
+        return self.x - 7, self.y - 7, self.x + 7, self.y + 7
 
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'tang:boss':
+            game_world.remove_object(self)

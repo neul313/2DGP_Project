@@ -9,6 +9,7 @@ from item import Item
 from inventory import Inventory
 from door import Door
 from HP import Bar
+from boss2 import Boss
 
 girl = None
 door_bridge = None
@@ -94,6 +95,10 @@ def init():
     board3 = Item(800, 220, 0, 0, 'board', 0)
     game_world.add_object(board3, 1)
     game_world.add_collision_pair('girl:item', None, board3)
+
+    boss = Boss()
+    game_world.add_object(boss, 1)
+    game_world.add_collision_pair('tang:boss', None, boss)
 
 
 def update():

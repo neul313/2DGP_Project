@@ -7,6 +7,7 @@ import game_framework
 from state_machine import StateMachine
 from door import Door
 from item import Item
+from tang import Tang
 
 # 달리기 시간
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -19,6 +20,9 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 3
+
+# 총 속도
+TANG_SPEED_PPS = 500
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -170,7 +174,6 @@ class Girl:
                 if len(self.inventory) < self.inventory_size:
                     print(f"{item.item_type} 획득")
 
-
                     # 아이템 타입별로 인벤토리에 넣기
                     if item.item_type == 'board':
                         self.inventory.append(item)
@@ -217,6 +220,22 @@ class Girl:
         elif event.type == SDL_KEYDOWN and event.key == SDLK_6:
             self.use_item(5)
             return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
+            have_gun = False
+            for item in self.inventory:
+                if item.item_type == 'gun':
+                    have_gun = True
+                    break
+
+            if have_gun:
+                print('yes gun')
+                tang = Tang(self.x, self.y, self.face_dir*TANG_SPEED_PPS)
+                game_world.add_object(tang,1)
+                game_world.add_collision_pair('tang:boss', tang, None)
+            else:
+                print('no gun')
+                return
+
 
 
         self.state_machine.handle_state_event(('INPUT', event))
