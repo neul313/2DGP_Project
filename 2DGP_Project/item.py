@@ -12,6 +12,7 @@ class Item:
     sparkle = None
     cloth = None
     board = None
+    gun = None
 
     def __init__(self, x, y, cx, cy, item_type = 'hp', value = 20):
         if Item.image is None:
@@ -29,6 +30,9 @@ class Item:
         if Item.board is None:
             Item.board = load_image('board.png')
 
+        if Item.gun is None:
+            Item.gun = load_image('gun.png')
+
         self.x, self.y = x, y
         self.clip_x = cx
         self.clip_y = cy
@@ -43,9 +47,10 @@ class Item:
         elif self.item_type == 'board':
             self.image = Item.board
 
+
         elif (self.item_type == 'card' or self.item_type == 'clothes'
               or self.item_type == 'card_purple' or self.item_type == 'card_ora'
-              or self.item_type == 'star'):
+              or self.item_type == 'star' or self.item_type == 'gun'):
             self.image = Item.sparkle
             self.frame = 0
             self.max_frame = 3
@@ -57,7 +62,7 @@ class Item:
     def update(self):
         if (self.item_type == 'card' or self.item_type == 'clothes'
               or self.item_type == 'card_purple' or self.item_type == 'card_ora'
-        or self.item_type == 'star'):
+        or self.item_type == 'star' or self.item_type == 'gun'):
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.max_frame
 
     def draw(self):
@@ -68,7 +73,8 @@ class Item:
             self.image.draw(draw_x, draw_y, 130, 130)
 
         elif (self.item_type == 'card' or self.item_type == 'card_purple'
-              or self.item_type == 'card_ora' or self.item_type == 'star'):
+              or self.item_type == 'card_ora' or self.item_type == 'star'
+              or self.item_type == 'gun'):
             self.image.clip_draw(int(self.frame) * self.f_w, 0, self.f_w, self.f_h,
                                  draw_x, draw_y, 130, 90)
 

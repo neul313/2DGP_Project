@@ -10,6 +10,7 @@ class Inventory:
         self.inven2 = load_image('inven2.png')
         self.item_image = load_image('items.png')
         self.bag_image = load_image('bag.png')
+        self.gun_image = load_image('gun.png')
 
     def update(self):
         pass
@@ -29,6 +30,8 @@ class Inventory:
                 Item.cloth.draw(draw_x, draw_y, 60, 60)
             elif item.item_type == 'board':
                 Item.board.draw(draw_x, draw_y, 50, 40)
+            elif item.item_type == 'gun':
+                Item.gun.draw(draw_x, draw_y, 60, 60)
 
             else:
                 clip_bottom = self.item_image.h - item.clip_y - item.size

@@ -169,8 +169,7 @@ class Girl:
 
                 if len(self.inventory) < self.inventory_size:
                     print(f"{item.item_type} 획득")
-                    item.collect()
-                    self.item_collision = None
+
 
                     # 아이템 타입별로 인벤토리에 넣기
                     if item.item_type == 'board':
@@ -185,10 +184,16 @@ class Girl:
                         self.inventory.append(Item(0, 0, 0, 0, 'clothes', 20))
                     elif item.item_type == 'star':
                         self.inventory.append(Item(0, 0, 32, 16, 'star', 10))
+                    elif item.item_type == 'gun':
+                        self.inventory.append(item)
                     else:
                         self.inventory.append(item)
                 else:
                     print("인벤토리 가득 참")
+
+                item.collect()
+                self.item_collision = None
+
                 return
 
         # 1번 키로 1번 슬롯 아이템 사용
@@ -200,6 +205,19 @@ class Girl:
         elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
             self.use_item(1)
             return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_3:
+            self.use_item(2)
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_4:
+            self.use_item(3)
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_5:
+            self.use_item(4)
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_6:
+            self.use_item(5)
+            return
+
 
         self.state_machine.handle_state_event(('INPUT', event))
 
@@ -235,7 +253,8 @@ class Girl:
                     or item_to_check.item_type == 'card_purple'
                     or item_to_check.item_type == 'card_ora'
                     or item_to_check.item_type == 'star'
-                    or item_to_check.item_type == 'board'):
+                    or item_to_check.item_type == 'board'
+                    or item_to_check.item_type == 'gun'):
                 return
 
             item_to_use = self.inventory.pop(index)
