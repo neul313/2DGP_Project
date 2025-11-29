@@ -220,7 +220,7 @@ class Girl:
         elif event.type == SDL_KEYDOWN and event.key == SDLK_6:
             self.use_item(5)
             return
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
+        if event.type == SDL_KEYDOWN and event.key == SDLK_a:
             have_gun = False
             for item in self.inventory:
                 if item.item_type == 'gun':
@@ -231,7 +231,8 @@ class Girl:
                 print('yes gun')
                 tang = Tang(self.x, self.y, self.face_dir*TANG_SPEED_PPS)
                 game_world.add_object(tang,1)
-                game_world.add_collision_pair('tang:boss', tang, None)
+
+                #game_world.add_collision_pair('tang:boss', tang, None)
             else:
                 print('no gun')
                 return

@@ -96,7 +96,7 @@ def init():
     game_world.add_object(board3, 1)
     game_world.add_collision_pair('girl:item', None, board3)
 
-    boss = Boss()
+    boss = Boss(300,280)
     game_world.add_object(boss, 1)
     game_world.add_collision_pair('tang:boss', None, boss)
 
