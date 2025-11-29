@@ -162,74 +162,28 @@ class Girl:
                     self.item_collision = None
                     return
 
-                if item.item_type == 'card':
-                    if len(self.inventory) < self.inventory_size:
-                        print("반짝이")
-
-                        item.collect()
-                        self.item_collision = None
-
-                        # 새로운 'card' 아이템을 생성하여 인벤토리에 추가
-                        new_card = Item(0, 0, 0, 16, 'card', 20)
-                        self.inventory.append(new_card)
-                        return
-                    else:
-                        return
-
-                elif item.item_type == 'card_purple':
-                    if len(self.inventory) < self.inventory_size:
-                        print("반짝이")
-                        item.collect()
-                        self.item_collision = None
-
-                        new_card = Item(0, 0, 16, 16, 'card_purple', 20)
-
-                        self.inventory.append(new_card)
-                        return
-                    else:
-                        return
-
-                elif item.item_type == 'card_ora':
-                    if len(self.inventory) < self.inventory_size:
-                        print("반짝이")
-                        item.collect()
-                        self.item_collision = None
-
-                        new_card = Item(0, 0, 32, 16, 'card_ora', 20)
-
-                        self.inventory.append(new_card)
-                        return
-                    else:
-                        return
-
-                elif item.item_type == 'clothes':
-                    if len(self.inventory) < self.inventory_size:
-                        print("반짝이")
-
-                        item.collect()
-                        self.item_collision = None
-
-                        new_cloth = Item(0, 0, 0, 0, 'clothes', 20)
-                        self.inventory.append(new_cloth)
-                        return
-                    else:
-                        return
-                elif item.item_type == 'star':
-                    if len(self.inventory) < self.inventory_size:
-                        print("반짝이")
-                        item.collect()
-                        self.item_collision = None
-                        new_star = Item(0, 0, 32, 16, 'star', 10)
-                        self.inventory.append(new_star)
-                        return
-                    else:
-                        print("인벤토리 가득 참")
-                        return
-
                 if len(self.inventory) < self.inventory_size:
-                    self.inventory.append(item)
+                    print(f"{item.item_type} 획득")
                     item.collect()
                     self.item_collision = None
+
+                    # 아이템 타입별로 인벤토리에 넣기
+                    if item.item_type == 'board':
+                        self.inventory.append(item)
+                    elif item.item_type == 'card':
+                        self.inventory.append(Item(0, 0, 0, 16, 'card', 20))
+                    elif item.item_type == 'card_purple':
+                        self.inventory.append(Item(0, 0, 16, 16, 'card_purple', 20))
+                    elif item.item_type == 'card_ora':
+                        self.inventory.append(Item(0, 0, 32, 16, 'card_ora', 20))
+                    elif item.item_type == 'clothes':
+                        self.inventory.append(Item(0, 0, 0, 0, 'clothes', 20))
+                    elif item.item_type == 'star':
+                        self.inventory.append(Item(0, 0, 32, 16, 'star', 10))
+                    else:
+                        self.inventory.append(item)
+                else:
+                    print("인벤토리 가득 참")
                 return
 
         # 1번 키로 1번 슬롯 아이템 사용
