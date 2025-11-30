@@ -10,6 +10,9 @@ from inventory import Inventory
 from door import Door
 from HP import Bar
 from boss2 import Boss
+import stage3
+import stage3            # (기존 거)
+import stage2_boss  # <--- 이거 추가 (파일명이 stage2_boss_mode.py 일 경우)
 
 girl = None
 door_bridge = None
@@ -96,14 +99,17 @@ def init():
     game_world.add_object(board3, 1)
     game_world.add_collision_pair('girl:item', None, board3)
 
-    boss = Boss(300,280)
-    game_world.add_object(boss, 1)
-    game_world.add_collision_pair('tang:boss', None, boss)
+    #boss = Boss(300,280)
+    #game_world.add_object(boss, 1)
+    #game_world.add_collision_pair('tang:boss', None, boss)
 
 
 def update():
     game_world.update()
     game_world.handle_collisions()
+
+    if girl.x > 2350:
+        game_framework.change_mode(stage2_boss)
 
 
 def draw():
