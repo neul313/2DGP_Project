@@ -18,7 +18,7 @@ class Boss:
     def __init__(self):
         self.image = [load_image('boss1.png'),load_image('boss2.png')]
         self.frame =0.0
-        self.x, self.y = 600, 300
+        self.x, self.y = 600, 100
         self.max_hp = 100 #최대
         self.hp = self.max_hp #현재 체력
 
@@ -37,31 +37,37 @@ class Boss:
             game_world.remove_object(self)
 
     def draw(self):
+        cx = self.x - game_framework.camera_x
+        cy = self.y - game_framework.camera_y
+
         image = self.image[int(self.frame)]
-        image.draw(self.x, self.y, 400,400)
+        image.draw(cx, cy, 400,400)
         self.draw_hp()
 
     def handle_event(self,e):
         pass
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'tang:boss':
+            print(f"Boss Hit! HP: {self.hp}")  # 디버그용 출력
+            self.hp -= 10
+            if self.hp < 0:
+                self.hp = 0
 
     def missile_spawn(self):
-        x = random.uniform(200,1000)
+        spawn_x = random.uniform(self.x - 400, self.x + 400)
 
-        missile = Missile(x,500)
-        game_world.add_object(missile,1)
+        missile = Missile(spawn_x, 500)
+        game_world.add_object(missile, 1)
         game_world.add_collision_pair('missile:girl', missile, None)
 
     def draw_hp(self):
         bar_x = 200
         bar_y = 70
-
-        x=self.x
-        y=self.y + 270
+        cx = self.x - game_framework.camera_x
+        cy = self.y - game_framework.camera_y
+        x=cx
+        y=cy + 270
 
         draw_rectangle(x - bar_x, y , x+bar_x, y + 25)
 
-    def hp_min(self, n):
-        self.hp -= n
