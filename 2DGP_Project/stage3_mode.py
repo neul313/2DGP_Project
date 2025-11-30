@@ -3,17 +3,18 @@ from pico2d import *
 
 import game_framework
 import game_world
+import play_mode
 from girl import Girl
 from stage2 import Stage2
 from item import Item
 from inventory import Inventory
-from door import Door
 from HP import Bar
 from boss import Boss
-import stage3  # 스테이지 3 임포트 됨
+import stage3
+import logo_mode
 
 girl = None
-boss = None  # update에서 보스 상태를 체크하려면 전역 변수 혹은 객체로 접근이 필요할 수 있음
+boss = None
 
 def handle_events():
     event_list = get_events()
@@ -28,10 +29,8 @@ def handle_events():
 
 
 def init():
-    import play_mode
 
     global girl
-    # global boss # 만약 update에서 boss를 쓰고 싶다면
 
     game_world.clear()
 
@@ -51,6 +50,12 @@ def init():
     girl.x, girl.y = 50, 100
     girl.face_dir = 1
     game_world.add_object(girl, 1)
+
+    background = stage3()
+    game_world.add_object(background, 0)
+
+    game_framework.camera_x = 0
+    game_framework.camera_y = 0
 
     stage2_background = Stage2()
     game_world.add_object(stage2_background, 0)
@@ -74,12 +79,23 @@ def init():
 
     # 총알과 보스의 충돌 처리
     game_world.add_collision_pair('tang:boss', None, boss)
+    game_world.add_collision_pair('missile:girl', None, girl)
+    game_world.add_collision_pair('tang:boss', None, boss)
 
 
 def update():
     game_world.update()
     game_world.handle_collisions()
 
+    boss_die = False
+    for obj in game_world.world[1]:
+        if isinstance(obj, Boss):  # 보스가 있다면
+            boss_die = True
+            break
+
+    if not boss_die:
+        print("clear")
+        game_framework.change_mode(logo_mode)
 
 def draw():
     clear_canvas()
