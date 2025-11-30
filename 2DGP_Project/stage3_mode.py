@@ -9,10 +9,11 @@ from item import Item
 from inventory import Inventory
 from door import Door
 from HP import Bar
-from boss2 import Boss
-import stage3
+from boss import Boss
+import stage3  # 스테이지 3 임포트 됨
 
 girl = None
+boss = None  # update에서 보스 상태를 체크하려면 전역 변수 혹은 객체로 접근이 필요할 수 있음
 
 def handle_events():
     event_list = get_events()
@@ -30,6 +31,8 @@ def init():
     import play_mode
 
     global girl
+    # global boss # 만약 update에서 boss를 쓰고 싶다면
+
     game_world.clear()
 
     if 'girl' not in game_framework.share:
@@ -44,6 +47,7 @@ def init():
         game_framework.share['mp'] = mp
     girl = game_framework.share['girl']
 
+    # 2스테이지 시작 좌표 설정
     girl.x, girl.y = 50, 100
     girl.face_dir = 1
     game_world.add_object(girl, 1)
@@ -51,13 +55,7 @@ def init():
     stage2_background = Stage2()
     game_world.add_object(stage2_background, 0)
     game_framework.share['background'] = stage2_background
-
-    stage2_background.set_center_object(girl)
-
-    stage2_background = Stage2()
-    game_world.add_object(stage2_background, 0)
-    game_framework.share['background'] = stage2_background
-    stage2_background.set_center_object(girl)
+    stage2_background.set_center_object(girl)  # 배경이 소녀를 따라다니게 설정
 
     game_world.add_object(game_framework.share['inventory_ui'], 3)
     game_world.add_object(game_framework.share['hp'], 3)
@@ -71,15 +69,16 @@ def init():
     game_world.add_object(item_gun, 1)
     game_world.add_collision_pair('girl:item', None, item_gun)
 
-    boss = Boss(300,280)
+    boss = Boss()
     game_world.add_object(boss, 1)
+
+    # 총알과 보스의 충돌 처리
     game_world.add_collision_pair('tang:boss', None, boss)
 
 
 def update():
     game_world.update()
     game_world.handle_collisions()
-
 
 
 def draw():
@@ -91,8 +90,10 @@ def draw():
 def finish():
     game_world.clear()
 
+
 def pause():
     pass
+
 
 def resume():
     pass

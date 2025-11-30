@@ -9,7 +9,6 @@ from item import Item
 from inventory import Inventory
 from door import Door
 from HP import Bar
-from boss2 import Boss
 import stage3
 import stage2_boss
 
@@ -53,12 +52,6 @@ def init():
     stage2_background = Stage2()
     game_world.add_object(stage2_background, 0)
     game_framework.share['background'] = stage2_background
-
-    stage2_background.set_center_object(girl)
-
-    stage2_background = Stage2()
-    game_world.add_object(stage2_background, 0)
-    game_framework.share['background'] = stage2_background
     stage2_background.set_center_object(girl)
 
     game_world.add_object(game_framework.share['inventory_ui'], 3)
@@ -98,16 +91,12 @@ def init():
     game_world.add_object(board3, 1)
     game_world.add_collision_pair('girl:item', None, board3)
 
-    #boss = Boss(300,280)
-    #game_world.add_object(boss, 1)
-    #game_world.add_collision_pair('tang:boss', None, boss)
-
-
 def update():
     game_world.update()
     game_world.handle_collisions()
 
     if girl.x > 2350:
+        print("보스로")
         game_framework.change_mode(stage2_boss)
 
 
