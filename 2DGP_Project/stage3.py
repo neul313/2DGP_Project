@@ -1,46 +1,41 @@
-import random
 from pico2d import *
-import play_mode
 import game_framework
-import game_world
 
-from boss import Boss
+class Stage3:
+    def __init__(self):
+        self.image = load_image('임시2.jpg')
 
+        self.canvas_width = 1200
+        self.canvas_height = 700
+        self.image_width = self.image.w
+        self.image_height = self.image.h
 
-def handle_events():
-    event_list = get_events()
-    for event in event_list:
-        if event.type == SDL_QUIT:
-            game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
-        else:
-            if play_mode.girl:
-                play_mode.girl.handle_event(event)
+        self.window_left = 0
+        self.window_bottom = 0
 
-
-def init():
-    print("Stage 3 Mode 진입")
-    boss = Boss()
-    game_world.add_object(boss, 0)
-
-    if play_mode.girl:
-        game_world.add_collision_pair('missile:girl', None, play_mode.girl)
+        self.center_object = None
 
 
-def update():
-    game_world.update()
-    game_world.handle_collisions()
+    def update(self):
+        if self.center_object is None:
+            return
+        #clamp는 입려으로 들어오는 모든 값들을 [min,max]범위 안으로 조정하는 역할
+        self.window_left = clamp(0, int(self.center_object.x) - self.canvas_width // 2,
+                                 self.image_width - self.canvas_width)
+
+        game_framework.camera_x = self.window_left
+        game_framework.camera_y = self.window_bottom
 
 
-def draw():
-    clear_canvas()
-    game_world.render()
-    update_canvas()
+    def draw(self):
+        self.image.clip_draw_to_origin( self.window_left, self.window_bottom,
+            self.canvas_width, self.canvas_height,0, 0)
 
-def finish():
-    pass
+    def get_bb(self):
+            pass
 
+    def handle_collision(self, group, other):
+        pass
 
-def pause(): pass
-def resume(): pass
+    def set_center_object(self, obj):
+        self.center_object = obj
