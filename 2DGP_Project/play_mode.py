@@ -12,7 +12,6 @@ from missile import Missile
 from HP import Bar
 from inventory import Inventory
 from door import Door
-import stage2_mode
 
 
 girl = None
@@ -32,6 +31,7 @@ def handle_events():
 
 def init():
     global girl
+    import stage2_mode
 
     girl = Girl()
     game_framework.share['girl'] = girl
@@ -117,7 +117,7 @@ def draw():
 
 
 def finish():
-    #game_world.clear()
+    game_world.clear()
     pass
 
 def pause(): pass
