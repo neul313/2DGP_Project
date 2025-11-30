@@ -232,7 +232,7 @@ class Girl:
                 tang = Tang(self.x, self.y, self.face_dir*TANG_SPEED_PPS)
                 game_world.add_object(tang,1)
 
-                #game_world.add_collision_pair('tang:boss', tang, None)
+                game_world.add_collision_pair('tang:boss', tang, None)
             else:
                 print('no gun')
                 return

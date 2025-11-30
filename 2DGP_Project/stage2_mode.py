@@ -11,8 +11,7 @@ from door import Door
 from HP import Bar
 from boss2 import Boss
 import stage3
-import stage3            # (기존 거)
-import stage2_boss  # <--- 이거 추가 (파일명이 stage2_boss_mode.py 일 경우)
+import stage2_boss
 
 girl = None
 door_bridge = None

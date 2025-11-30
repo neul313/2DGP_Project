@@ -1,5 +1,6 @@
 from pico2d import *
 import play_mode
+import game_framework
 
 class Bar:
     images = None
@@ -52,6 +53,10 @@ class Bar:
             image_set[index].draw(self.x, self.y, self.width, self.height)
 
     def update(self):
+
+        if 'girl' in game_framework.share:
+            girl = game_framework.share['girl']
+
         if self.bar == 'hp':
             if play_mode.girl:
                 if hasattr(play_mode.girl, 'hp'):
@@ -64,19 +69,6 @@ class Bar:
                     self.current_mp = play_mode.girl.mp
                 else:
                     self.current_mp = 80  # mp가 없으면 테스트용으로 80
-            self.current_mp = clamp(0, self.current_mp, self.max_mp)
-
-    def update(self):
-        if self.bar == 'hp':
-            if play_mode.girl:
-                if hasattr(play_mode.girl, 'hp'):
-                    self.current_hp = play_mode.girl.hp
-            self.current_hp = clamp(0, self.current_hp, self.max_hp)
-
-        elif self.bar == 'mp':
-            if play_mode.girl:
-                if hasattr(play_mode.girl, 'mp'):
-                    self.current_mp = play_mode.girl.mp
             self.current_mp = clamp(0, self.current_mp, self.max_mp)
 
     def handle_event(self, event):
