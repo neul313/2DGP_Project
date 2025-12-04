@@ -129,7 +129,7 @@ class Girl:
         self.state_machine.update()
 
         # MP 자연 회복
-        if self.mp == 0:
+        if self.mp < 80:
             self.mp_timer += game_framework.frame_time
             if self.mp_timer >= 2.0:
                 self.mp += 10
