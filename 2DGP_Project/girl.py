@@ -141,7 +141,14 @@ class Girl:
 
     def draw(self):
         self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
+        l, b, r, t = self.get_bb()
+
+        l -= game_framework.camera_x
+        b -= game_framework.camera_y
+        r -= game_framework.camera_x
+        t -= game_framework.camera_y
+
+        draw_rectangle(l, b, r, t)
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
@@ -291,6 +298,16 @@ class Girl:
                 self.x = left -50
             else:
                 self.x = right + 50
+        elif group == 'boss:girl':
+            if other.action == 2 :
+                self.hp -= 10
+                print("Boss Attack! HP -10")
+
+                if self.hp <= 0:
+                    print("Game Over")
+                    self.hp = 80
+                    import logo_mode
+                    game_framework.change_mode(logo_mode)
 
 
     def get_bb(self):
