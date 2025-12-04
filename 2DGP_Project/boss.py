@@ -31,7 +31,7 @@ class Boss:
 
         if self.missile_timer <= 0:
             self.missile_spawn()
-            self.missile_timer = random.uniform(3.0, 5.0)
+            self.missile_timer = random.uniform(0.5, 1.0)
 
         if self.hp <=0:
             game_world.remove_object(self)
@@ -54,12 +54,27 @@ class Boss:
             if self.hp < 0:
                 self.hp = 0
 
-    def missile_spawn(self):
-        spawn_x = random.uniform(self.x - 400, self.x + 400)
+    # def missile_spawn(self):
+    #     spawn_x = random.uniform(self.x - 400, self.x + 400)
+    #
+    #     missile = Missile(spawn_x, 500)
+    #     game_world.add_object(missile, 1)
+    #     game_world.add_collision_pair('missile:girl', missile, None)
 
-        missile = Missile(spawn_x, 500)
-        game_world.add_object(missile, 1)
-        game_world.add_collision_pair('missile:girl', missile, None)
+    def missile_spawn(self):
+
+        if 'girl' in game_framework.share:
+            girl = game_framework.share['girl']
+            target_x = girl.x
+            spawn_range = 100
+            spawn_x = random.uniform(target_x - spawn_range, target_x + spawn_range)
+
+            spawn_y = girl.y + 500
+
+            missile = Missile(spawn_x, spawn_y)
+            game_world.add_object(missile, 1)
+        else:
+            pass
 
     def draw_hp(self):
         bar_x = 200
