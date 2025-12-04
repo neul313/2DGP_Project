@@ -100,6 +100,7 @@ class Girl:
 
         self.hp = 80
         self.mp = 80
+        self.mp_timer = 0
 
         if 'inventory' in game_framework.share:
             self.inventory = game_framework.share['inventory']
@@ -126,6 +127,17 @@ class Girl:
         self.item_collision = None
         #self.door_collision = None
         self.state_machine.update()
+
+        # MP 자연 회복
+        if self.mp == 0:
+            self.mp_timer += game_framework.frame_time
+            if self.mp_timer >= 2.0:
+                self.mp += 10
+                if self.mp > 80:
+                    self.mp = 80
+                self.mp_timer = 0
+        else:
+            self.mp_timer = 0
 
     def draw(self):
         self.state_machine.draw()
@@ -235,11 +247,17 @@ class Girl:
                     break
 
             if have_gun:
-                print('yes gun')
-                tang = Tang(self.x, self.y, self.face_dir*TANG_SPEED_PPS)
-                game_world.add_object(tang,1)
+                if self.mp >= 10:
+                    self.mp -= 10  # MP 10 감소
+                    print(f' MP: {self.mp}')
+                    print('yes gun')
+                    tang = Tang(self.x, self.y, self.face_dir * TANG_SPEED_PPS)
+                    game_world.add_object(tang, 1)
+                    game_world.add_collision_pair('tang:boss', tang, None)
+                else:
+                    print('no mp')
 
-                game_world.add_collision_pair('tang:boss', tang, None)
+
             else:
                 print('no gun')
                 return
