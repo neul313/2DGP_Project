@@ -33,3 +33,9 @@ class Missile:
     def handle_collision(self, group, other):
         if group == 'missile:girl':
             game_world.remove_object(self)
+            if other:
+                other.hp -= 10
+                print(f"Girl HP: {other.hp}")  #
+
+                if other.hp < 0:
+                    other.hp = 0

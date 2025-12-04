@@ -73,6 +73,8 @@ class Boss:
 
             missile = Missile(spawn_x, spawn_y)
             game_world.add_object(missile, 1)
+            game_world.add_collision_pair('missile:girl', missile, None)
+
         else:
             pass
 

@@ -74,7 +74,6 @@ def init():
     game_world.add_object(boss, 1)
 
     game_world.add_collision_pair('tang:boss', None, boss)
-    game_world.add_collision_pair('missile:girl', None, girl)
 
 def update():
     game_world.update()
@@ -89,6 +88,11 @@ def update():
     if not boss_die:
         print("clear")
         game_framework.change_mode(logo_mode)
+
+    if girl.hp <= 0:
+        print("Game Over")
+        game_framework.change_mode(logo_mode)
+        return
 
 def draw():
     clear_canvas()
