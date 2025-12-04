@@ -101,6 +101,7 @@ class Girl:
         self.hp = 80
         self.mp = 80
         self.mp_timer = 0
+        self.no_attack_timer = 0
 
         if 'inventory' in game_framework.share:
             self.inventory = game_framework.share['inventory']
@@ -138,6 +139,11 @@ class Girl:
                 self.mp_timer = 0
         else:
             self.mp_timer = 0
+
+        if self.no_attack_timer > 0:
+            self.no_attack_timer -= game_framework.frame_time
+            if self.no_attack_timer < 0:
+                self.no_attack_timer = 0
 
     def draw(self):
         self.state_machine.draw()
@@ -299,8 +305,9 @@ class Girl:
             else:
                 self.x = right + 50
         elif group == 'boss:girl':
-            if other.action == 2 :
+            if other.action == 2 and self.no_attack_timer <=0 :
                 self.hp -= 10
+                self.no_attack_timer = 1.0
                 print("Boss Attack! HP -10")
 
                 if self.hp <= 0:

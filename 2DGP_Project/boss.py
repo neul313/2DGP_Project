@@ -101,3 +101,6 @@ class Boss:
 
         draw_rectangle(x - bar_x, y , x+bar_x, y + 25)
 
+    def get_bb(self):
+        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
+
