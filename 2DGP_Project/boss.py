@@ -19,7 +19,7 @@ class Boss:
         self.image = [load_image('boss1.png'),load_image('boss2.png')]
         self.frame =0.0
         self.x, self.y = 600, 100
-        self.max_hp = 100 #최대
+        self.max_hp = 200 #최대
         self.hp = self.max_hp #현재 체력
 
         #미사일 타이머

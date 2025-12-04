@@ -98,10 +98,15 @@ class Girl:
         self.item_collision = None
         self.door_collision = None
 
-        self.hp = 40
+        self.hp = 80
         self.mp = 80
 
-        self.inventory = []
+        if 'inventory' in game_framework.share:
+            self.inventory = game_framework.share['inventory']
+
+        else:
+            self.inventory = []
+
         self.inventory_size = 2
 
         self.is_bag = False
@@ -246,6 +251,13 @@ class Girl:
     def handle_collision(self, group, other):
         if group == 'missile:girl':
             print("hit")
+            self.hp -= 10
+            if self.hp <= 0:
+                print("Game Over -> Return to Stage 2")
+                self.hp = 80
+                game_framework.share['inventory'] = self.inventory
+                import logo_mode
+                game_framework.change_mode(logo_mode)
             #game_framework.quit()
         elif group == 'girl:item':
             #print("item get")

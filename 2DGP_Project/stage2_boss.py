@@ -13,7 +13,7 @@ def init():
 
     print("Stage 2 Boss 진입")
     game_world.clear()
-    image = load_image('임시.jpg')
+    image = load_image('stage3.png')
 
     game_framework.camera_x = 0
     game_framework.camera_y = 0
@@ -69,6 +69,8 @@ def update():
 
 def draw():
     clear_canvas()
+    if image:
+        image.draw(600, 350)
     game_world.render()
     update_canvas()
 

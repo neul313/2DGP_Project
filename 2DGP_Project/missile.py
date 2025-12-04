@@ -35,8 +35,8 @@ class Missile:
         if group == 'missile:girl':
             game_world.remove_object(self)
             if other:
-                other.hp -= 10
-                print(f"Girl HP: {other.hp}")  #
+                #other.hp -= 10
+                #print(f"Girl HP: {other.hp}")  #
 
                 if other.hp < 0:
                     other.hp = 0

@@ -3,7 +3,7 @@ import game_framework
 
 class Stage3:
     def __init__(self):
-        self.image = load_image('임시2.jpg')
+        self.image = load_image('stage3.png')
 
         self.canvas_width = 1200
         self.canvas_height = 700

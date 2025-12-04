@@ -89,10 +89,6 @@ def update():
         print("clear")
         game_framework.change_mode(logo_mode)
 
-    if girl.hp <= 0:
-        print("Game Over")
-        game_framework.change_mode(logo_mode)
-        return
 
 def draw():
     clear_canvas()
