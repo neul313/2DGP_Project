@@ -24,7 +24,6 @@ class Boss:
             self.image = load_image('Bear.png')
         if Boss.hp_images is None:
             Boss.hp_images = {}
-            # 0부터 10까지 이미지 로드 (폴더명: boss2_hp)
             for i in range(11):
                 Boss.hp_images[i] = load_image(f'hp_boss1/{i}.png')
 
@@ -72,9 +71,6 @@ class Boss:
         # 현재 행동에 따라 사용할 프레임 범위 설정
         start_index = 0
         frame_count = 0
-        hp_index = int(self.hp / 10)
-        hp_index = clamp(0, hp_index, 10)
-        Boss.hp_images[hp_index].draw(self.x, self.y + 100, 300, 300)
 
         if self.action == ACTION_IDLE:
             start_index = 0
@@ -135,6 +131,12 @@ class Boss:
             self.image.clip_draw(x, y, w, h, cx, cy, self.draw_width, self.draw_height)
         else:
             self.image.clip_composite_draw(x, y, w, h, 0, 'h', cx, cy, self.draw_width, self.draw_height)
+
+        # 보스 체력바 그리기
+
+        hp_index = int(self.hp / 10)
+        hp_index = clamp(0, hp_index, 10)
+        Boss.hp_images[hp_index].draw(self.x, self.y + 100, 300, 300)
 
         # 디버그 박스
         l, b, r, t = self.get_bb()

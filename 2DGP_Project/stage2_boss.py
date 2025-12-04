@@ -31,6 +31,7 @@ def init():
         girl.y = 100
 
         game_world.add_collision_pair('tang:boss', None, boss)
+        game_world.add_collision_pair('boss:girl', boss, girl)
 
         if 'inventory_ui' in game_framework.share:
             game_world.add_object(game_framework.share['inventory_ui'], 3)
