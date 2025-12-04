@@ -88,6 +88,7 @@ class Run:
             self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, x, y,100,100)
 
 
+
 class Girl:
     def __init__(self):
         self.face_dir = 1
@@ -123,6 +124,7 @@ class Girl:
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
@@ -262,7 +264,7 @@ class Girl:
 
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 35, self.y - 50, self.x + 50, self.y + 50
 
     def use_item(self, index):
 

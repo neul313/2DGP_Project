@@ -25,6 +25,7 @@ class Missile:
         sx = self.x - game_framework.camera_x
         sy = self.y - game_framework.camera_y
         Missile.image.draw(sx, sy, size,size)
+        draw_rectangle(sx - 25, sy - size // 2, sx + 25, sy + size // 2)
 
     def get_bb(self):
         bb=size//2

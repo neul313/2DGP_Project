@@ -23,7 +23,7 @@ class Boss:
         self.hp = self.max_hp #현재 체력
 
         #미사일 타이머
-        self.missile_timer = random.uniform(3.0, 5.0)
+        self.missile_timer = random.uniform(0.5, 1.0)
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
