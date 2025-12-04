@@ -12,6 +12,8 @@ FRAMES_PER_ACTION = 2.0
 
 class Boss:
     image = None
+    hp_images = None
+
     def load_images(self):
         pass
 
@@ -21,6 +23,12 @@ class Boss:
         self.x, self.y = 600, 100
         self.max_hp = 200 #최대
         self.hp = self.max_hp #현재 체력
+
+        if Boss.hp_images is None:
+            Boss.hp_images = {}
+            # 0부터 20까지 이미지 로드
+            for i in range(21):
+                Boss.hp_images[i] = load_image(f'hp_boss2/{i}.png')
 
         #미사일 타이머
         self.missile_timer = random.uniform(0.5, 1.0)
@@ -42,7 +50,12 @@ class Boss:
 
         image = self.image[int(self.frame)]
         image.draw(cx, cy, 400,400)
-        self.draw_hp()
+
+        hp_index = int(self.hp / 10)
+        hp_index = clamp(0, hp_index, 20)
+
+        Boss.hp_images[hp_index].draw(cx, cy + 250, 300, 300)
+
 
     def handle_event(self,e):
         pass

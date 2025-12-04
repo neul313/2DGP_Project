@@ -17,12 +17,19 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 
 class Boss:
     image = None
+    hp_images = None
 
     def __init__(self, x, y):
         if self.image is None:
             self.image = load_image('Bear.png')
+        if Boss.hp_images is None:
+            Boss.hp_images = {}
+            # 0부터 10까지 이미지 로드 (폴더명: boss2_hp)
+            for i in range(11):
+                Boss.hp_images[i] = load_image(f'hp_boss1/{i}.png')
 
         self.x, self.y = x, y
+
 
         # 화면에 그려질 크기
         self.draw_width = 150
@@ -65,6 +72,9 @@ class Boss:
         # 현재 행동에 따라 사용할 프레임 범위 설정
         start_index = 0
         frame_count = 0
+        hp_index = int(self.hp / 10)
+        hp_index = clamp(0, hp_index, 10)
+        Boss.hp_images[hp_index].draw(self.x, self.y + 100, 300, 300)
 
         if self.action == ACTION_IDLE:
             start_index = 0
