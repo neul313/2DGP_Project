@@ -70,7 +70,7 @@ def init():
 
     boss = Boss()
     boss.x = 800
-    boss.y = 300
+    boss.y = 230
     game_world.add_object(boss, 1)
 
     game_world.add_collision_pair('tang:boss', None, boss)
