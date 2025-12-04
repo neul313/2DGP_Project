@@ -5,6 +5,7 @@ import game_world
 import play_mode
 from boss2 import Boss
 import stage3_mode
+from door import Door
 
 image = None
 
@@ -65,7 +66,21 @@ def update():
     # 보스가 없으면 -> 3스테이지로 이동
     if not boss_die:
         print("clear")
-        game_framework.change_mode(stage3_mode)
+
+        door_exists = False
+        for obj in game_world.world[1]:
+            if isinstance(obj, Door):
+                door_exists = True
+                break
+
+        if not door_exists:
+            print("탈출구(포탈) 생성!")
+            exit_door = Door(1100, 100, 0, stage3_mode)
+            game_world.add_object(exit_door, 1)
+
+            if 'girl' in game_framework.share:
+                girl = game_framework.share['girl']
+                game_world.add_collision_pair('girl:door', girl, exit_door)
 
 
 def draw():

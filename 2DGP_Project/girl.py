@@ -161,6 +161,13 @@ class Girl:
             if self.door_collision and abs(self.x - self.door_collision.x) < 110:
                 door = self.door_collision
                 target_item = None
+
+                if door.door_id == 0:
+                    print("보스방 통과")
+                    if door.stage:
+                        game_framework.change_mode(door.stage)
+                    return
+
                 #2스테이지 로직
                 if door.door_id == 2:
                     for item in self.inventory:
@@ -295,6 +302,11 @@ class Girl:
             self.item_collision = other
 
         elif group == 'girl:door':
+            if other.door_id == 0:
+                print("포탈 진입 - 다음 스테이지로!")
+                if other.stage:
+                    game_framework.change_mode(other.stage)
+                return
             print("door close")
             self.door_collision = other
 
@@ -315,6 +327,7 @@ class Girl:
                     self.hp = 80
                     import logo_mode
                     game_framework.change_mode(logo_mode)
+
 
 
     def get_bb(self):
