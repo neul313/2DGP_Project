@@ -28,7 +28,8 @@ def handle_events():
 
 def init():
     global girl
-    import stage2_mode
+    #import stage2_mode
+    import illust
 
     girl = Girl()
     game_framework.share['girl'] = girl
@@ -48,7 +49,7 @@ def init():
     game_world.add_object(door2, 1)
     game_world.add_collision_pair('girl:door', girl, door2)
 
-    door3 = Door(2300, 60, 1, stage2_mode)
+    door3 = Door(2300, 60, 1, illust)
     game_world.add_object(door3, 1)
     game_world.add_collision_pair('girl:door', girl, door3)
 

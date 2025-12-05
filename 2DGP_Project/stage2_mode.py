@@ -46,6 +46,8 @@ def init():
         game_framework.share['mp'] = mp
     girl = game_framework.share['girl']
 
+    girl.state_machine.cur_state = girl.IDLE
+
     girl.x, girl.y = 50, 230
     game_world.add_object(girl, 1)
 
