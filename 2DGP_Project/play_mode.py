@@ -42,6 +42,9 @@ def init():
     game_framework.share['girl'] = girl
     game_world.add_object(girl, 1)
 
+    girl.reset_collision_info()
+    girl.reset_state()
+
     stage1 = Stage1()
     game_world.add_object(stage1, 0)
     stage1.set_center_object(girl)

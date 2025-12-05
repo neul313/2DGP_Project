@@ -45,6 +45,9 @@ def init():
         game_framework.share['hp'] = hp
         game_framework.share['mp'] = mp
 
+    girl.reset_collision_info()
+    girl.reset_state()
+
     girl.x, girl.y = 100, 100
     girl.face_dir = 1
     game_world.add_object(girl, 1)

@@ -66,10 +66,11 @@ class Run:
         self.girl = girl
 
     def enter(self, e):
-        if right_down(e) or left_up(e):
-            self.girl.dir = self.girl.face_dir = 1
-        elif left_down(e) or right_up(e):
-            self.girl.dir = self.girl.face_dir = -1
+        # if right_down(e) or left_up(e):
+        #     self.girl.dir = self.girl.face_dir = 1
+        # elif left_down(e) or right_up(e):
+        #     self.girl.dir = self.girl.face_dir = -1
+        pass
 
     def exit(self, e):
         pass
@@ -92,6 +93,7 @@ class Run:
 
 class Girl:
     def __init__(self):
+        self.dir = 0
         self.face_dir = 1
         self.x, self.y = 50, 90
         self.frame = 0
@@ -160,6 +162,30 @@ class Girl:
         draw_rectangle(l, b, r, t)
 
     def handle_event(self, event):
+        # 방향키 입력 처리 (누적 방식: +=, -= 사용)
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_RIGHT:
+                self.dir += 1
+            elif event.key == SDLK_LEFT:
+                self.dir -= 1
+        elif event.type == SDL_KEYUP:
+            if event.key == SDLK_RIGHT:
+                self.dir -= 1
+            elif event.key == SDLK_LEFT:
+                self.dir += 1
+
+            # 이동 상태 결정 (dir 값에 따라 상태 강제 전환)
+        if event.type in (SDL_KEYDOWN, SDL_KEYUP):
+            if event.key in (SDLK_RIGHT, SDLK_LEFT):
+                if self.dir != 0:
+                    self.face_dir = self.dir  # 바라보는 방향 갱신
+                    self.state_machine.cur_state = self.RUN
+                    self.RUN.enter(event)  # 필요하다면 호출
+                else:
+                    self.state_machine.cur_state = self.IDLE
+                    self.IDLE.enter(event)
+                return
+
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if self.door_collision and abs(self.x - self.door_collision.x) < 110:
                 door = self.door_collision
@@ -393,3 +419,14 @@ class Girl:
 
         else:
             print(f"일반 아이템 슬롯 {index + 1}번에 아이템이 없습니다.")
+
+    def reset_collision_info(self):
+        self.item_collision = None  # 아이템 접촉 정보 삭제
+        self.door_collision = None  # 문 접촉 정보 삭제
+        self.state_machine.cur_state = self.IDLE
+
+    def reset_state(self):
+        self.state_machine.cur_state = self.IDLE  # 강제로 IDLE 상태로 변경 // 이미지 키 눌림 오류
+        self.dir = 0  # 이동 방향 초기화
+        self.face_dir = 1  # 바라보는 방향 초기화
+        print("상태 리셋 완료: IDLE")
