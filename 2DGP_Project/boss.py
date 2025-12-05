@@ -31,7 +31,7 @@ class Boss:
                 Boss.hp_images[i] = load_image(f'hp_boss2/{i}.png')
 
         #미사일 타이머
-        self.missile_timer = random.uniform(0.5, 1.0)
+        self.missile_timer = random.uniform(1.0, 2.0)
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
@@ -39,7 +39,7 @@ class Boss:
 
         if self.missile_timer <= 0:
             self.missile_spawn()
-            self.missile_timer = random.uniform(0.5, 1.0)
+            self.missile_timer = random.uniform(1.0, 2.0)
 
         if self.hp <=0:
             game_world.remove_object(self)
@@ -89,7 +89,7 @@ class Boss:
             spawn_range = 100
             spawn_x = random.uniform(target_x - spawn_range, target_x + spawn_range)
 
-            spawn_y = girl.y + 500
+            spawn_y = girl.y + 600
 
             missile = Missile(spawn_x, spawn_y)
             game_world.add_object(missile, 1)
