@@ -11,7 +11,7 @@ from tang import Tang
 
 # 달리기 시간
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_KMPH = 10.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -75,7 +75,8 @@ class Run:
         pass
     def do(self):
         self.girl.frame = (self.girl.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        self.girl.x += self.girl.dir * RUN_SPEED_PPS * game_framework.frame_time
+        #self.girl.x += self.girl.dir * RUN_SPEED_PPS * game_framework.frame_time
+        self.girl.x += self.girl.dir * self.girl.speed_pps * game_framework.frame_time
         self.girl.x = clamp(25, self.girl.x, 2400 - 30)
 
     def draw(self):
@@ -102,6 +103,7 @@ class Girl:
         self.mp = 80
         self.mp_timer = 0
         self.no_attack_timer = 0
+        self.speed_pps = RUN_SPEED_PPS
 
         if 'inventory' in game_framework.share:
             self.inventory = game_framework.share['inventory']
@@ -231,6 +233,11 @@ class Girl:
                         item.collect()
                         self.item_collision = None
                         print(f"특수 아이템 획득: {item.item_type}")
+
+                        if item.item_type == 'clothes':
+                            self.speed_pps = RUN_SPEED_PPS * 1.5
+                            print("이속 증가")
+                            
                     else:
                         print("특수 아이템 슬롯 가득 참")
                     return
