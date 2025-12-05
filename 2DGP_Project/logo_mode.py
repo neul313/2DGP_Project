@@ -1,6 +1,7 @@
 import game_framework
 from pico2d import *
 import play_mode
+import prologue
 
 def init():
     global image
@@ -18,7 +19,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-            game_framework.change_mode(play_mode)
+            game_framework.change_mode(prologue)
 
 def draw():
     clear_canvas()
