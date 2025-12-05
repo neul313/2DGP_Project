@@ -8,10 +8,17 @@ class Popup:
         self.visible = False
 
     def update(self):
-        pass
+        if self.play_time > 0:
+            self.play_time -= game_framework.frame_time
+            if self.play_time <= 0:
+                self.visible = False
+                self.image = None # 이미지 해제
 
     def draw(self):
-        pass
+        if self.visible and self.image:
+            self.image.draw(600, 350, 400, 400)
 
     def show(self, image_file, time=2.0):
-        pass
+        self.image = load_image(image_file)
+        self.play_time = time
+        self.visible = True
