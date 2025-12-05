@@ -112,6 +112,7 @@ class Girl:
         self.inventory_size = 2
 
         self.is_bag = False
+        self.is_second_bag = False
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -200,6 +201,17 @@ class Girl:
 
             elif self.item_collision:
                 item = self.item_collision
+
+                special_items = ['gun', 'clothes']
+                current_special_count = 0
+                current_normal_count = 0
+
+                for inv_item in self.inventory:
+                    if inv_item.item_type in special_items:
+                        current_special_count += 1
+                    else:
+                        current_normal_count += 1
+
                 if item.item_type == 'bag':
                     new_slots = item.value  # 아이템에 저장된 값 (4)
                     self.inventory_size += new_slots
@@ -210,8 +222,21 @@ class Girl:
                     self.item_collision = None
                     return
 
-                if len(self.inventory) < self.inventory_size:
-                    print(f"{item.item_type} 획득")
+                if item.item_type in special_items:
+                    if not self.is_second_bag:
+                        self.is_second_bag = True
+
+                    if current_special_count < 4:
+                        self.inventory.append(item)
+                        item.collect()
+                        self.item_collision = None
+                        print(f"특수 아이템 획득: {item.item_type}")
+                    else:
+                        print("특수 아이템 슬롯 가득 참")
+                    return
+
+                if current_normal_count < self.inventory_size:
+                    print(f"일반 아이템 획득: {item.item_type}")
 
                     # 아이템 타입별로 인벤토리에 넣기
                     if item.item_type == 'board':
@@ -222,12 +247,8 @@ class Girl:
                         self.inventory.append(Item(0, 0, 16, 16, 'card_purple', 20))
                     elif item.item_type == 'card_ora':
                         self.inventory.append(Item(0, 0, 32, 16, 'card_ora', 20))
-                    elif item.item_type == 'clothes':
-                        self.inventory.append(Item(0, 0, 0, 0, 'clothes', 20))
                     elif item.item_type == 'star':
                         self.inventory.append(Item(0, 0, 32, 16, 'star', 10))
-                    elif item.item_type == 'gun':
-                        self.inventory.append(item)
                     else:
                         self.inventory.append(item)
 
