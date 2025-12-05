@@ -69,8 +69,8 @@ def init():
     game_world.add_collision_pair('girl:door', girl, None)
 
     boss = Boss()
-    boss.x = 800
-    boss.y = 230
+    # boss.x = 800
+    # boss.y = 100
     game_world.add_object(boss, 1)
 
     game_world.add_collision_pair('tang:boss', None, boss)

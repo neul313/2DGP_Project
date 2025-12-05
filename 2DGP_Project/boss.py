@@ -20,7 +20,7 @@ class Boss:
     def __init__(self):
         self.image = [load_image('boss1.png'),load_image('boss2.png')]
         self.frame =0.0
-        self.x, self.y = 600, 100
+        self.x, self.y = 600, 230
         self.max_hp = 200 #최대
         self.hp = self.max_hp #현재 체력
 
@@ -55,6 +55,13 @@ class Boss:
         hp_index = clamp(0, hp_index, 20)
 
         Boss.hp_images[hp_index].draw(cx, cy + 250, 300, 300)
+
+        l, b, r, t = self.get_bb()
+        l -= game_framework.camera_x
+        b -= game_framework.camera_y
+        r -= game_framework.camera_x
+        t -= game_framework.camera_y
+        draw_rectangle(l, b, r, t)
 
 
     def handle_event(self,e):
@@ -102,5 +109,5 @@ class Boss:
         draw_rectangle(x - bar_x, y , x+bar_x, y + 25)
 
     def get_bb(self):
-        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
+        return self.x - 170, self.y - 170, self.x + 170, self.y + 170
 
