@@ -1,14 +1,11 @@
-import random
 from pico2d import *
 
 import game_framework
 import game_world
 
 from girl import Girl
-from boss import Boss
 from stage1 import Stage1
 from item import Item
-from missile import Missile
 from HP import Bar
 from inventory import Inventory
 from door import Door
@@ -64,6 +61,10 @@ def init():
     game_world.add_object(item_bag, 1)
     game_world.add_collision_pair('girl:item', None, item_bag)
 
+    item_shoes = Item(900, 60, 30, 0, 'shoes', 4)
+    game_world.add_object(item_shoes, 1)
+    game_world.add_collision_pair('girl:item', None, item_shoes)
+
     item2 = Item(1500, 60, 18, 0, 'hp', 20)
     game_world.add_object(item2, 1)
     game_world.add_collision_pair('girl:item', None, item2)
@@ -80,7 +81,7 @@ def init():
     game_world.add_object(item_sparkle3, 1)
     game_world.add_collision_pair('girl:item', None, item_sparkle3)
 
-    item_sparkle4 = Item(2000, 80, 0, 0, 'card_ora', 20)
+    item_sparkle4 = Item(1900, 80, 0, 0, 'card_ora', 20)
     game_world.add_object(item_sparkle4, 1)
     game_world.add_collision_pair('girl:item', None, item_sparkle4)
 

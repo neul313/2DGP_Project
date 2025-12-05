@@ -237,7 +237,11 @@ class Girl:
                         if item.item_type == 'clothes':
                             self.speed_pps = RUN_SPEED_PPS * 1.5
                             print("이속 증가")
-                            
+
+                        elif item.item_type == 'shoes':
+                            self.speed_pps = RUN_SPEED_PPS * 2.0
+                            print("이속 증가")
+
                     else:
                         print("특수 아이템 슬롯 가득 참")
                     return

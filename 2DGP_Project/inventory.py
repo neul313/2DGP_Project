@@ -41,6 +41,8 @@ class Inventory:
                     Item.cloth.draw(draw_x, draw_y, 60, 60)
                 elif item.item_type == 'gun':
                     Item.gun.draw(draw_x, draw_y, 60, 60)
+                elif item.item_type == 'shoes':
+                    Item.shoes.draw(draw_x, draw_y, 60, 60)
 
                 special_index += 1
 
