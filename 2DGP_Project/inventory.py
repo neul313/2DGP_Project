@@ -33,7 +33,7 @@ class Inventory:
         for item in self.girl.inventory:
 
             # 특수 아이템
-            if item.item_type in ['gun', 'clothes']:
+            if item.item_type in ['gun', 'clothes', 'shoes']:
                 draw_x = 317 + special_index * 67
                 draw_y = 575
 

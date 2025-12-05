@@ -314,8 +314,6 @@ class Girl:
                 print('no gun')
                 return
 
-
-
         self.state_machine.handle_state_event(('INPUT', event))
 
     def handle_collision(self, group, other):
@@ -360,34 +358,32 @@ class Girl:
                     import logo_mode
                     game_framework.change_mode(logo_mode)
 
-
-
     def get_bb(self):
         return self.x - 35, self.y - 50, self.x + 50, self.y + 50
 
     def use_item(self, index):
+        normal_items = []
+        for i, item in enumerate(self.inventory):
+            # 건너뛸 아이템 종류들
+            if item.item_type not in ['gun', 'clothes', 'shoes']:
+                normal_items.append((item, i))
 
-        if len(self.inventory) > index:
-            item_to_check = self.inventory[index]
+        if index < len(normal_items):
+            item, real_index = normal_items[index]
 
-            if (item_to_check.item_type == 'card' or item_to_check.item_type == 'clothes'
-                    or item_to_check.item_type == 'card_purple'
-                    or item_to_check.item_type == 'card_ora'
-                    or item_to_check.item_type == 'star'
-                    or item_to_check.item_type == 'board'
-                    or item_to_check.item_type == 'gun'):
-                return
+            print(f"일반 슬롯 {index + 1}번 사용 시도: {item.item_type}")
 
-            item_to_use = self.inventory.pop(index)
-            item_type = item_to_use.item_type
-            value = item_to_use.value
+            if item.item_type == 'hp':
+                self.hp = min(80, self.hp + item.value)
+                self.inventory.pop(real_index)
+                print("HP 회복")
 
-            print(f"Using item slot {index + 1} ({item_type})")
-
-            if item_type == 'hp':
-                self.hp = min(80, self.hp + value)
-            elif item_type == 'mp':
-                self.mp = min(80, self.mp + value)
+            elif item.item_type == 'mp':
+                self.mp = min(80, self.mp + item.value)
+                self.inventory.pop(real_index)
+                print("MP 회복")
+            else:
+                print(f"'{item.item_type}'은(는) 키를 눌러서 사용하는 아이템이 아닙니다.")
 
         else:
-            print(f"Slot {index + 1} x ")  # 디버그용
+            print(f"일반 아이템 슬롯 {index + 1}번에 아이템이 없습니다.")
