@@ -9,6 +9,7 @@ from item import Item
 from HP import Bar
 from inventory import Inventory
 from door import Door
+from popup1 import Popup
 
 
 girl = None
@@ -30,6 +31,12 @@ def init():
     global girl
     #import stage2_mode
     import illust
+
+    popup = Popup()
+    game_framework.share['popup'] = popup
+    game_world.add_object(popup, 3)
+
+    popup.show('story_image/space.png', 2.0)
 
     girl = Girl()
     game_framework.share['girl'] = girl

@@ -16,7 +16,7 @@ class Popup:
 
     def draw(self):
         if self.visible and self.image:
-            self.image.draw(600, 350, 400, 400)
+            self.image.draw(600, 300, 300, 200)
 
     def show(self, image_file, time=2.0):
         self.image = load_image(image_file)

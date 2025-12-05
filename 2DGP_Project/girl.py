@@ -234,6 +234,12 @@ class Girl:
                         self.item_collision = None
                         print(f"특수 아이템 획득: {item.item_type}")
 
+                        if item.item_type == 'gun':
+                            if 'popup' in game_framework.share:
+                                game_framework.share['popup'].show('story_image/a.png', 2.0)
+                                print("총 사용조작 팝업")
+
+
                         if item.item_type == 'clothes':
                             self.speed_pps = RUN_SPEED_PPS * 1.5
                             print("이속 증가")

@@ -11,6 +11,7 @@ from door import Door
 from HP import Bar
 import stage3
 import stage2_boss
+from popup1 import Popup
 
 girl = None
 door_bridge = None
@@ -33,6 +34,10 @@ def init():
     global girl
     global door_bridge
     game_world.clear()
+
+    if 'popup' not in game_framework.share:
+        game_framework.share['popup'] = Popup()
+    game_world.add_object(game_framework.share['popup'], 3)
 
     if 'girl' not in game_framework.share:
         girl = Girl()
