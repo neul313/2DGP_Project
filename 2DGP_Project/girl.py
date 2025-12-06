@@ -1,6 +1,5 @@
 from pico2d import *
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, \
-    SDLK_6
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, SDLK_6
 
 import random
 import game_world
@@ -63,6 +62,10 @@ class Idle:
         x = self.girl.x - game_framework.camera_x
         y = self.girl.y - game_framework.camera_y
 
+        # 무적 상태일 때 깜빡거리게 표현 (선택 사항)
+        if self.girl.invincible_timer > 0 and int(self.girl.invincible_timer * 10) % 2 == 0:
+            return  # 그리지 않음 (투명)
+
         if self.girl.face_dir == 1:  # right
             self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, x, y, 100, 100)
         else:  # left
@@ -93,6 +96,10 @@ class Run:
         x = self.girl.x - game_framework.camera_x
         y = self.girl.y - game_framework.camera_y
 
+        # 무적 상태일 때 깜빡거리게 표현
+        if self.girl.invincible_timer > 0 and int(self.girl.invincible_timer * 10) % 2 == 0:
+            return
+
         if self.girl.face_dir == 1:
             self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, x, y, 100, 100)
         else:
@@ -114,6 +121,9 @@ class Girl:
         self.mp_timer = 0
         self.no_attack_timer = 0
         self.speed_pps = RUN_SPEED_PPS
+
+        # [수정] 무적 시간 타이머 추가
+        self.invincible_timer = 0
 
         self.bg_width = 2400
 
@@ -142,8 +152,6 @@ class Girl:
         self.IDLE = Idle(self)
         self.RUN = Run(self)
 
-        # [수정] 상태 머신의 자동 전환 설정을 비웠습니다. (충돌 방지)
-        # 이제 handle_event와 do 함수가 직접 상태를 관리합니다.
         self.state_machine = StateMachine(
             self.IDLE,
             {
@@ -156,6 +164,7 @@ class Girl:
         self.item_collision = None
         self.state_machine.update()
 
+        # MP 자연 회복
         if self.mp < 80:
             self.mp_timer += game_framework.frame_time
             if self.mp_timer >= 2.0:
@@ -165,10 +174,17 @@ class Girl:
         else:
             self.mp_timer = 0
 
+        # 보스 몸통박치기 무적 시간 감소
         if self.no_attack_timer > 0:
             self.no_attack_timer -= game_framework.frame_time
             if self.no_attack_timer < 0:
                 self.no_attack_timer = 0
+
+        # [수정] 미사일 피격 무적 시간 감소
+        if self.invincible_timer > 0:
+            self.invincible_timer -= game_framework.frame_time
+            if self.invincible_timer < 0:
+                self.invincible_timer = 0
 
     def draw(self):
         self.state_machine.draw()
@@ -180,7 +196,6 @@ class Girl:
         draw_rectangle(l, b, r, t)
 
     def handle_event(self, event):
-        # 1. 키 입력 상태 갱신
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_RIGHT:
                 self.key_state['right'] = True
@@ -192,21 +207,17 @@ class Girl:
             elif event.key == SDLK_LEFT:
                 self.key_state['left'] = False
 
-        # 2. 방향 및 바라보는 곳 계산
         self.dir = 0
         if self.key_state['right']:
             self.dir += 1
         if self.key_state['left']:
             self.dir -= 1
 
-        # [중요] 바라보는 방향 즉시 갱신
         if self.dir != 0:
             self.face_dir = self.dir
 
-        # 3. 상태 머신 이벤트 전달 (공격 등 다른 키 처리용)
         self.state_machine.handle_state_event(('INPUT', event))
 
-        # 4. 스페이스바 및 아이템 사용 등 기타 키 처리
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if self.door_collision and abs(self.x - self.door_collision.x) < 110:
                 door = self.door_collision
@@ -346,21 +357,34 @@ class Girl:
     def handle_collision(self, group, other):
         import stage3_mode
         import logo_mode
+        import stage2_boss
+
 
         if group == 'missile:girl':
-            print("hit")
-            self.hp -= 10
-            if self.hp <= 0:
-                print("Game Over")
-                self.hp = 80
-                game_framework.share['inventory'] = self.inventory
-                game_framework.share['inventory_size'] = self.inventory_size
-                game_framework.share['is_bag'] = self.is_bag
-                game_framework.share['is_second_bag'] = self.is_second_bag
-                if game_framework.stack[-1] == stage3_mode:
-                    game_framework.change_mode(stage3_mode)
-                else:
-                    game_framework.change_mode(logo_mode)
+            # [수정] 무적 시간 확인: 타이머가 0일 때만 대미지
+            if self.invincible_timer <= 0:
+                print("hit")
+                self.hp -= 10
+                self.invincible_timer = 1.0  # 1초간 무적
+
+                if self.hp <= 0:
+                    print("Game Over")
+
+                    game_framework.share['inventory'] = self.inventory
+                    game_framework.share['inventory_size'] = self.inventory_size
+                    game_framework.share['is_bag'] = self.is_bag
+                    game_framework.share['is_second_bag'] = self.is_second_bag
+
+                    # [수정 중요] 모드 변경 전에 HP를 80으로 채워둡니다!
+                    self.hp = 80
+
+                    if game_framework.stack[-1] == stage3_mode:
+                        game_framework.change_mode(logo_mode)
+                    else:
+                        game_framework.change_mode(logo_mode)
+
+                    # 이미 모드를 바꿨으니 더 이상 처리하지 않도록 리턴
+                    return
 
         elif group == 'girl:item':
             self.item_collision = other
@@ -388,15 +412,20 @@ class Girl:
                 self.no_attack_timer = 1.0
                 if self.hp <= 0:
                     print("Game Over")
-                    self.hp = 80
+
                     game_framework.share['inventory'] = self.inventory
                     game_framework.share['inventory_size'] = self.inventory_size
                     game_framework.share['is_bag'] = self.is_bag
                     game_framework.share['is_second_bag'] = self.is_second_bag
+
+                    # [수정 중요] 모드 변경 전에 HP를 80으로 채워둡니다!
+                    self.hp = 80
+
                     if game_framework.stack[-1] == stage3_mode:
-                        game_framework.change_mode(stage3_mode)
+                        game_framework.change_mode(logo_mode)
                     else:
                         game_framework.change_mode(logo_mode)
+                    return
 
     def get_bb(self):
         return self.x - 35, self.y - 50, self.x + 50, self.y + 50

@@ -1,4 +1,5 @@
 world = [[] for _ in range(4)]
+collision_pairs = {}
 
 def add_object(o, depth = 0):
     world[depth].append(o)
@@ -44,6 +45,7 @@ def clear():
 
     for layer in world:
         layer.clear()
+    collision_pairs.clear()
 
 
 def collide(a,b):
@@ -57,7 +59,6 @@ def collide(a,b):
 
     return True
 
-collision_pairs = {}
 
 def add_collision_pair(group, a, b):
     #처음 추가되는 그룹이면
@@ -72,7 +73,7 @@ def add_collision_pair(group, a, b):
 
 
 def handle_collisions():
-    for group, pairs in collision_pairs.items():
+    for group, pairs in list(collision_pairs.items()):
         for a in pairs[0]:
             for b in pairs[1]:
                 if collide(a, b):

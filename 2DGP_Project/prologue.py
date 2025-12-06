@@ -2,7 +2,7 @@ from pico2d import *
 import game_framework
 import game_world
 
-IMAGE_FILES = ['story_image/주의.png','story_image/설명1.png', 'story_image/설명2.png']
+IMAGE_FILES = ['story_image/설명1.png', 'story_image/설명2.png']
 
 images = []
 image_index = 0

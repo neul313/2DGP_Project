@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import game_world
+import logo_mode
 
 IMAGE_FILES = ['story_image/설명3.png', 'story/last1.png',
                'story/last2.png', 'story_image/인사.png']
@@ -37,8 +37,7 @@ def update():
         image_index += 1  # 다음 장으로
 
         if image_index >= len(images):
-            import play_mode
-            game_framework.change_mode(play_mode)
+            game_framework.change_mode(logo_mode)
 
 
 def draw():
@@ -63,8 +62,7 @@ def handle_events():
             timer = 0
             image_index += 1
             if image_index >= len(images):
-                import play_mode
-                game_framework.change_mode(play_mode)
+                game_framework.change_mode(logo_mode)
 
 
 def pause():

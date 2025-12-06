@@ -9,7 +9,6 @@ from item import Item
 from inventory import Inventory
 from door import Door
 from HP import Bar
-import stage3
 import stage2_boss
 from popup1 import Popup
 
