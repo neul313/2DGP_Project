@@ -1,5 +1,6 @@
 from pico2d import *
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, SDLK_6
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, \
+    SDLK_6
 
 import random
 import game_world
@@ -24,14 +25,18 @@ FRAMES_PER_ACTION = 3
 # 총 속도
 TANG_SPEED_PPS = 500
 
+
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
+
 
 def right_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
 
+
 def left_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
+
 
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
@@ -49,6 +54,7 @@ class Idle:
 
     def do(self):
         self.girl.frame = (self.girl.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        # 방향키가 눌려있으면(dir이 0이 아니면) RUN으로 전환
         if self.girl.dir != 0:
             self.girl.state_machine.cur_state = self.girl.RUN
             self.girl.RUN.enter(None)
@@ -78,6 +84,11 @@ class Run:
         self.girl.x += self.girl.dir * self.girl.speed_pps * game_framework.frame_time
         self.girl.x = clamp(25, self.girl.x, self.girl.bg_width - 30)
 
+        # 멈췄으면(dir이 0이면) IDLE로 전환
+        if self.girl.dir == 0:
+            self.girl.state_machine.cur_state = self.girl.IDLE
+            self.girl.IDLE.enter(None)
+
     def draw(self):
         x = self.girl.x - game_framework.camera_x
         y = self.girl.y - game_framework.camera_y
@@ -106,19 +117,18 @@ class Girl:
 
         self.bg_width = 2400
 
-        # 인벤토리 불러오기
+        self.key_state = {'left': False, 'right': False}
+
         if 'inventory' in game_framework.share:
             self.inventory = game_framework.share['inventory']
         else:
             self.inventory = []
 
-        # 가방 크기 불러오기 (없으면 2로 시작)
         if 'inventory_size' in game_framework.share:
             self.inventory_size = game_framework.share['inventory_size']
         else:
             self.inventory_size = 2
 
-        # 가방 획득 여부 불러오기
         if 'is_bag' in game_framework.share:
             self.is_bag = game_framework.share['is_bag']
         else:
@@ -131,13 +141,14 @@ class Girl:
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
+
+        # [수정] 상태 머신의 자동 전환 설정을 비웠습니다. (충돌 방지)
+        # 이제 handle_event와 do 함수가 직접 상태를 관리합니다.
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE: {right_down: self.RUN, left_down: self.RUN,
-                            right_up: self.RUN, left_up: self.RUN},
-                self.RUN: {right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE,
-                           left_down: self.IDLE}
+                self.IDLE: {},
+                self.RUN: {}
             }
         )
 
@@ -169,30 +180,34 @@ class Girl:
         draw_rectangle(l, b, r, t)
 
     def handle_event(self, event):
+        # 1. 키 입력 상태 갱신
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_RIGHT:
-                self.dir += 1
+                self.key_state['right'] = True
             elif event.key == SDLK_LEFT:
-                self.dir -= 1
+                self.key_state['left'] = True
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT:
-                self.dir -= 1
+                self.key_state['right'] = False
             elif event.key == SDLK_LEFT:
-                self.dir += 1
+                self.key_state['left'] = False
 
-        if event.type in (SDL_KEYDOWN, SDL_KEYUP):
-            if event.key in (SDLK_RIGHT, SDLK_LEFT):
-                if self.dir != 0:
-                    self.face_dir = self.dir
-                    self.state_machine.cur_state = self.RUN
-                    self.RUN.enter(event)
-                else:
-                    self.state_machine.cur_state = self.IDLE
-                    self.IDLE.enter(event)
-                return
+        # 2. 방향 및 바라보는 곳 계산
+        self.dir = 0
+        if self.key_state['right']:
+            self.dir += 1
+        if self.key_state['left']:
+            self.dir -= 1
 
+        # [중요] 바라보는 방향 즉시 갱신
+        if self.dir != 0:
+            self.face_dir = self.dir
+
+        # 3. 상태 머신 이벤트 전달 (공격 등 다른 키 처리용)
+        self.state_machine.handle_state_event(('INPUT', event))
+
+        # 4. 스페이스바 및 아이템 사용 등 기타 키 처리
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            # 문(Door) 상호작용
             if self.door_collision and abs(self.x - self.door_collision.x) < 110:
                 door = self.door_collision
                 target_item = None
@@ -200,7 +215,6 @@ class Girl:
                 if door.door_id == 0:
                     print("보스방 통과")
                     if door.stage:
-                        #스테이지 이동 전 현재 상태 저장
                         game_framework.share['inventory'] = self.inventory
                         game_framework.share['inventory_size'] = self.inventory_size
                         game_framework.share['is_bag'] = self.is_bag
@@ -229,7 +243,6 @@ class Girl:
                         game_framework.share['background'].change_background()
 
                     if door.stage:
-                        #스테이지 이동 전 현재 상태 저장
                         game_framework.share['inventory'] = self.inventory
                         game_framework.share['inventory_size'] = self.inventory_size
                         game_framework.share['is_bag'] = self.is_bag
@@ -238,7 +251,6 @@ class Girl:
                 else:
                     print("필요한 아이템 없음")
 
-            #아이템 획득
             elif self.item_collision:
                 item = self.item_collision
                 special_items = ['gun', 'clothes', 'shoes']
@@ -256,8 +268,6 @@ class Girl:
                     self.is_bag = True
                     game_framework.share['inventory_size'] = 6
                     game_framework.share['is_bag'] = True
-                    print("가방 획득! 인벤토리 6칸으로 확장")
-
                     item.collect()
                     self.item_collision = None
                     return
@@ -271,8 +281,6 @@ class Girl:
                         self.inventory.append(item)
                         item.collect()
                         self.item_collision = None
-                        print(f"특수 아이템 획득: {item.item_type}")
-
                         if item.item_type == 'gun':
                             if 'popup' in game_framework.share:
                                 game_framework.share['popup'].show('story_image/a.png', 2.0)
@@ -284,9 +292,7 @@ class Girl:
                         print("특수 아이템 슬롯 가득 참")
                     return
 
-                # 일반 아이템 획득 로직
                 if current_normal_count < self.inventory_size:
-                    print(f"일반 아이템 획득: {item.item_type}")
                     if item.item_type == 'board':
                         self.inventory.append(item)
                     elif item.item_type == 'card':
@@ -299,14 +305,12 @@ class Girl:
                         self.inventory.append(Item(0, 0, 32, 16, 'star', 10))
                     else:
                         self.inventory.append(item)
-
                     item.collect()
                     self.item_collision = None
                 else:
-                    print(f"인벤토리 가득 참 ({current_normal_count}/{self.inventory_size})")
+                    print(f"인벤토리 가득 참")
                 return
 
-        # 아이템 사용 키 입력 (1~6, a)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
             self.use_item(0)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
@@ -331,13 +335,13 @@ class Girl:
                     self.mp -= 10
                     tang = Tang(self.x, self.y, self.face_dir * TANG_SPEED_PPS)
                     game_world.add_object(tang, 1)
+
+                    game_world.add_collision_pair('tang:boss', tang, None)
                 else:
                     print('no mp')
             else:
                 print('no gun')
                 return
-
-        self.state_machine.handle_state_event(('INPUT', event))
 
     def handle_collision(self, group, other):
         import stage3_mode
@@ -349,13 +353,10 @@ class Girl:
             if self.hp <= 0:
                 print("Game Over")
                 self.hp = 80
-
-                # 죽을 때도 상태 저장
                 game_framework.share['inventory'] = self.inventory
                 game_framework.share['inventory_size'] = self.inventory_size
                 game_framework.share['is_bag'] = self.is_bag
                 game_framework.share['is_second_bag'] = self.is_second_bag
-
                 if game_framework.stack[-1] == stage3_mode:
                     game_framework.change_mode(stage3_mode)
                 else:
@@ -368,7 +369,6 @@ class Girl:
             if other.door_id == 0:
                 print("포탈 진입")
                 if other.stage:
-                    # 이동 전 저장
                     game_framework.share['inventory'] = self.inventory
                     game_framework.share['inventory_size'] = self.inventory_size
                     game_framework.share['is_bag'] = self.is_bag
@@ -389,13 +389,10 @@ class Girl:
                 if self.hp <= 0:
                     print("Game Over")
                     self.hp = 80
-
-                    # 죽을 때 저장
                     game_framework.share['inventory'] = self.inventory
                     game_framework.share['inventory_size'] = self.inventory_size
                     game_framework.share['is_bag'] = self.is_bag
                     game_framework.share['is_second_bag'] = self.is_second_bag
-
                     if game_framework.stack[-1] == stage3_mode:
                         game_framework.change_mode(stage3_mode)
                     else:
@@ -429,6 +426,8 @@ class Girl:
         self.state_machine.cur_state = self.IDLE
 
     def reset_state(self):
+        self.key_state = {'left': False, 'right': False}
+        self.dir = 0
         self.state_machine.cur_state = self.IDLE
         self.face_dir = 1
         print("상태 리셋: IDLE")
