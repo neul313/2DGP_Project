@@ -10,8 +10,8 @@ from item import Item
 from tang import Tang
 
 # 달리기 시간
-PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 10.0  # Km / Hour
+PIXEL_PER_METER = (10.0 / 0.3)
+RUN_SPEED_KMPH = 10.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -37,7 +37,6 @@ def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 
 
-
 class Idle:
     def __init__(self, girl):
         self.girl = girl
@@ -50,15 +49,18 @@ class Idle:
 
     def do(self):
         self.girl.frame = (self.girl.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        if self.girl.dir != 0:
+            self.girl.state_machine.cur_state = self.girl.RUN
+            self.girl.RUN.enter(None)
 
     def draw(self):
         x = self.girl.x - game_framework.camera_x
         y = self.girl.y - game_framework.camera_y
 
         if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, x, y,100,100)
-        else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 144, 48, 48, x, y,100,100)
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 0, 48, 48, x, y, 100, 100)
+        else:  # left
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 144, 48, 48, x, y, 100, 100)
 
 
 class Run:
@@ -66,29 +68,24 @@ class Run:
         self.girl = girl
 
     def enter(self, e):
-        # if right_down(e) or left_up(e):
-        #     self.girl.dir = self.girl.face_dir = 1
-        # elif left_down(e) or right_up(e):
-        #     self.girl.dir = self.girl.face_dir = -1
         pass
 
     def exit(self, e):
         pass
+
     def do(self):
         self.girl.frame = (self.girl.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        #self.girl.x += self.girl.dir * RUN_SPEED_PPS * game_framework.frame_time
         self.girl.x += self.girl.dir * self.girl.speed_pps * game_framework.frame_time
-        self.girl.x = clamp(25, self.girl.x, 2400 - 30)
+        self.girl.x = clamp(25, self.girl.x, self.girl.bg_width - 30)
 
     def draw(self):
         x = self.girl.x - game_framework.camera_x
         y = self.girl.y - game_framework.camera_y
 
-        if self.girl.face_dir == 1:  # right
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, x, y,100,100)
-        else:  # face_dir == -1: # left
-            self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, x, y,100,100)
-
+        if self.girl.face_dir == 1:
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 48, 48, 48, x, y, 100, 100)
+        else:
+            self.girl.image.clip_draw(int(self.girl.frame) * 48, 96, 48, 48, x, y, 100, 100)
 
 
 class Girl:
@@ -107,16 +104,30 @@ class Girl:
         self.no_attack_timer = 0
         self.speed_pps = RUN_SPEED_PPS
 
+        self.bg_width = 2400
+
+        # 인벤토리 불러오기
         if 'inventory' in game_framework.share:
             self.inventory = game_framework.share['inventory']
-
         else:
             self.inventory = []
 
-        self.inventory_size = 2
+        # 가방 크기 불러오기 (없으면 2로 시작)
+        if 'inventory_size' in game_framework.share:
+            self.inventory_size = game_framework.share['inventory_size']
+        else:
+            self.inventory_size = 2
 
-        self.is_bag = False
-        self.is_second_bag = False
+        # 가방 획득 여부 불러오기
+        if 'is_bag' in game_framework.share:
+            self.is_bag = game_framework.share['is_bag']
+        else:
+            self.is_bag = False
+
+        if 'is_second_bag' in game_framework.share:
+            self.is_second_bag = game_framework.share['is_second_bag']
+        else:
+            self.is_second_bag = False
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -129,18 +140,16 @@ class Girl:
                            left_down: self.IDLE}
             }
         )
+
     def update(self):
         self.item_collision = None
-        #self.door_collision = None
         self.state_machine.update()
 
-        # MP 자연 회복
         if self.mp < 80:
             self.mp_timer += game_framework.frame_time
             if self.mp_timer >= 2.0:
                 self.mp += 10
-                if self.mp > 80:
-                    self.mp = 80
+                if self.mp > 80: self.mp = 80
                 self.mp_timer = 0
         else:
             self.mp_timer = 0
@@ -153,16 +162,13 @@ class Girl:
     def draw(self):
         self.state_machine.draw()
         l, b, r, t = self.get_bb()
-
         l -= game_framework.camera_x
         b -= game_framework.camera_y
         r -= game_framework.camera_x
         t -= game_framework.camera_y
-
         draw_rectangle(l, b, r, t)
 
     def handle_event(self, event):
-        # 방향키 입력 처리 (누적 방식: +=, -= 사용)
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_RIGHT:
                 self.dir += 1
@@ -174,19 +180,19 @@ class Girl:
             elif event.key == SDLK_LEFT:
                 self.dir += 1
 
-            # 이동 상태 결정 (dir 값에 따라 상태 강제 전환)
         if event.type in (SDL_KEYDOWN, SDL_KEYUP):
             if event.key in (SDLK_RIGHT, SDLK_LEFT):
                 if self.dir != 0:
-                    self.face_dir = self.dir  # 바라보는 방향 갱신
+                    self.face_dir = self.dir
                     self.state_machine.cur_state = self.RUN
-                    self.RUN.enter(event)  # 필요하다면 호출
+                    self.RUN.enter(event)
                 else:
                     self.state_machine.cur_state = self.IDLE
                     self.IDLE.enter(event)
                 return
 
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            # 문(Door) 상호작용
             if self.door_collision and abs(self.x - self.door_collision.x) < 110:
                 door = self.door_collision
                 target_item = None
@@ -194,43 +200,48 @@ class Girl:
                 if door.door_id == 0:
                     print("보스방 통과")
                     if door.stage:
+                        #스테이지 이동 전 현재 상태 저장
+                        game_framework.share['inventory'] = self.inventory
+                        game_framework.share['inventory_size'] = self.inventory_size
+                        game_framework.share['is_bag'] = self.is_bag
+                        game_framework.share['is_second_bag'] = self.is_second_bag
                         game_framework.change_mode(door.stage)
                     return
 
-                #2스테이지 로직
                 if door.door_id == 2:
                     for item in self.inventory:
                         if item.item_type == 'board':
                             target_item = item
                             break
                 else:
-                    #1스테이지 로직
                     for item in self.inventory:
-                        if (item.item_type == 'card' or item.item_type == 'card_purple'
-                                or item.item_type == 'card_ora'):
+                        if item.item_type in ['card', 'card_purple', 'card_ora']:
                             target_item = item
                             break
+
                 if target_item:
                     print(f"아이템 사용: {target_item.item_type}")
-                    self.inventory.remove(target_item)  # 아이템 사용
-                    door.unlock()  # 문 열기
-                    self.door_collision = None  # 상호작용 종료
+                    self.inventory.remove(target_item)
+                    door.unlock()
+                    self.door_collision = None
 
-                    #문?을 열면 배경이 바뀜.
                     if 'background' in game_framework.share:
                         game_framework.share['background'].change_background()
-                        print("배경 변경")
 
-                    # 다음 스테이지로 이동
                     if door.stage:
+                        #스테이지 이동 전 현재 상태 저장
+                        game_framework.share['inventory'] = self.inventory
+                        game_framework.share['inventory_size'] = self.inventory_size
+                        game_framework.share['is_bag'] = self.is_bag
+                        game_framework.share['is_second_bag'] = self.is_second_bag
                         game_framework.change_mode(door.stage)
                 else:
                     print("필요한 아이템 없음")
 
+            #아이템 획득
             elif self.item_collision:
                 item = self.item_collision
-
-                special_items = ['gun', 'clothes']
+                special_items = ['gun', 'clothes', 'shoes']
                 current_special_count = 0
                 current_normal_count = 0
 
@@ -241,18 +252,20 @@ class Girl:
                         current_normal_count += 1
 
                 if item.item_type == 'bag':
-                    new_slots = item.value  # 아이템에 저장된 값 (4)
-                    self.inventory_size += new_slots
+                    self.inventory_size = 6
                     self.is_bag = True
-                    print("인벤토리 증가")
+                    game_framework.share['inventory_size'] = 6
+                    game_framework.share['is_bag'] = True
+                    print("가방 획득! 인벤토리 6칸으로 확장")
 
-                    item.collect()  # 가방 월드에서 제거
+                    item.collect()
                     self.item_collision = None
                     return
 
                 if item.item_type in special_items:
                     if not self.is_second_bag:
                         self.is_second_bag = True
+                        game_framework.share['is_second_bag'] = True
 
                     if current_special_count < 4:
                         self.inventory.append(item)
@@ -263,25 +276,17 @@ class Girl:
                         if item.item_type == 'gun':
                             if 'popup' in game_framework.share:
                                 game_framework.share['popup'].show('story_image/a.png', 2.0)
-                                print("총 사용조작 팝업")
-
-
                         if item.item_type == 'clothes':
                             self.speed_pps = RUN_SPEED_PPS * 1.5
-                            print("이속 증가")
-
                         elif item.item_type == 'shoes':
                             self.speed_pps = RUN_SPEED_PPS * 2.0
-                            print("이속 증가")
-
                     else:
                         print("특수 아이템 슬롯 가득 참")
                     return
 
+                # 일반 아이템 획득 로직
                 if current_normal_count < self.inventory_size:
                     print(f"일반 아이템 획득: {item.item_type}")
-
-                    # 아이템 타입별로 인벤토리에 넣기
                     if item.item_type == 'board':
                         self.inventory.append(item)
                     elif item.item_type == 'card':
@@ -298,50 +303,36 @@ class Girl:
                     item.collect()
                     self.item_collision = None
                 else:
-                    print("인벤토리 가득 참")
-
+                    print(f"인벤토리 가득 참 ({current_normal_count}/{self.inventory_size})")
                 return
 
-        # 1번 키로 1번 슬롯 아이템 사용
+        # 아이템 사용 키 입력 (1~6, a)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
-            self.use_item(0)  # 0번 아이템 사용
-            return
-
-        # 2번 키로 2번 슬롯 아이템 사용
+            self.use_item(0)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
             self.use_item(1)
-            return
         elif event.type == SDL_KEYDOWN and event.key == SDLK_3:
             self.use_item(2)
-            return
         elif event.type == SDL_KEYDOWN and event.key == SDLK_4:
             self.use_item(3)
-            return
         elif event.type == SDL_KEYDOWN and event.key == SDLK_5:
             self.use_item(4)
-            return
         elif event.type == SDL_KEYDOWN and event.key == SDLK_6:
             self.use_item(5)
-            return
+
         if event.type == SDL_KEYDOWN and event.key == SDLK_a:
             have_gun = False
             for item in self.inventory:
                 if item.item_type == 'gun':
                     have_gun = True
                     break
-
             if have_gun:
                 if self.mp >= 10:
-                    self.mp -= 10  # MP 10 감소
-                    print(f' MP: {self.mp}')
-                    print('yes gun')
+                    self.mp -= 10
                     tang = Tang(self.x, self.y, self.face_dir * TANG_SPEED_PPS)
                     game_world.add_object(tang, 1)
-                    game_world.add_collision_pair('tang:boss', tang, None)
                 else:
                     print('no mp')
-
-
             else:
                 print('no gun')
                 return
@@ -349,46 +340,66 @@ class Girl:
         self.state_machine.handle_state_event(('INPUT', event))
 
     def handle_collision(self, group, other):
+        import stage3_mode
+        import logo_mode
+
         if group == 'missile:girl':
             print("hit")
             self.hp -= 10
             if self.hp <= 0:
-                print("Game Over -> Return to Stage 2")
+                print("Game Over")
                 self.hp = 80
+
+                # 죽을 때도 상태 저장
                 game_framework.share['inventory'] = self.inventory
-                import logo_mode
-                game_framework.change_mode(logo_mode)
-            #game_framework.quit()
+                game_framework.share['inventory_size'] = self.inventory_size
+                game_framework.share['is_bag'] = self.is_bag
+                game_framework.share['is_second_bag'] = self.is_second_bag
+
+                if game_framework.stack[-1] == stage3_mode:
+                    game_framework.change_mode(stage3_mode)
+                else:
+                    game_framework.change_mode(logo_mode)
+
         elif group == 'girl:item':
-            #print("item get")
             self.item_collision = other
 
         elif group == 'girl:door':
             if other.door_id == 0:
-                print("포탈 진입 - 다음 스테이지로!")
+                print("포탈 진입")
                 if other.stage:
+                    # 이동 전 저장
+                    game_framework.share['inventory'] = self.inventory
+                    game_framework.share['inventory_size'] = self.inventory_size
+                    game_framework.share['is_bag'] = self.is_bag
+                    game_framework.share['is_second_bag'] = self.is_second_bag
                     game_framework.change_mode(other.stage)
                 return
-            print("door close")
             self.door_collision = other
-
             left, bottom, right, top = other.get_bb()
-            cur_dir = self.face_dir
-            if cur_dir > 0:
-                self.x = left -50
+            if self.face_dir > 0:
+                self.x = left - 50
             else:
                 self.x = right + 50
+
         elif group == 'boss:girl':
-            if other.action == 2 and self.no_attack_timer <=0 :
+            if self.no_attack_timer <= 0:
                 self.hp -= 10
                 self.no_attack_timer = 1.0
-                print("Boss Attack! HP -10")
-
                 if self.hp <= 0:
                     print("Game Over")
                     self.hp = 80
-                    import logo_mode
-                    game_framework.change_mode(logo_mode)
+
+                    # 죽을 때 저장
+                    game_framework.share['inventory'] = self.inventory
+                    game_framework.share['inventory_size'] = self.inventory_size
+                    game_framework.share['is_bag'] = self.is_bag
+                    game_framework.share['is_second_bag'] = self.is_second_bag
+
+                    if game_framework.stack[-1] == stage3_mode:
+                        game_framework.change_mode(stage3_mode)
+                    else:
+                        game_framework.change_mode(logo_mode)
 
     def get_bb(self):
         return self.x - 35, self.y - 50, self.x + 50, self.y + 50
@@ -396,37 +407,28 @@ class Girl:
     def use_item(self, index):
         normal_items = []
         for i, item in enumerate(self.inventory):
-            # 건너뛸 아이템 종류들
             if item.item_type not in ['gun', 'clothes', 'shoes']:
                 normal_items.append((item, i))
 
         if index < len(normal_items):
             item, real_index = normal_items[index]
-
-            print(f"일반 슬롯 {index + 1}번 사용 시도: {item.item_type}")
-
             if item.item_type == 'hp':
                 self.hp = min(80, self.hp + item.value)
                 self.inventory.pop(real_index)
-                print("HP 회복")
-
             elif item.item_type == 'mp':
                 self.mp = min(80, self.mp + item.value)
                 self.inventory.pop(real_index)
-                print("MP 회복")
             else:
-                print(f"'{item.item_type}'은(는) 키를 눌러서 사용하는 아이템이 아닙니다.")
-
+                print(f"'{item.item_type}' 사용 불가")
         else:
-            print(f"일반 아이템 슬롯 {index + 1}번에 아이템이 없습니다.")
+            print("아이템 없음")
 
     def reset_collision_info(self):
-        self.item_collision = None  # 아이템 접촉 정보 삭제
-        self.door_collision = None  # 문 접촉 정보 삭제
+        self.item_collision = None
+        self.door_collision = None
         self.state_machine.cur_state = self.IDLE
 
     def reset_state(self):
-        self.state_machine.cur_state = self.IDLE  # 강제로 IDLE 상태로 변경 // 이미지 키 눌림 오류
-        self.dir = 0  # 이동 방향 초기화
-        self.face_dir = 1  # 바라보는 방향 초기화
-        print("상태 리셋 완료: IDLE")
+        self.state_machine.cur_state = self.IDLE
+        self.face_dir = 1
+        print("상태 리셋: IDLE")

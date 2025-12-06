@@ -29,17 +29,15 @@ def handle_events():
 
 
 def init():
-    import play_mode
-
     global girl
     global door_bridge
     game_world.clear()
 
-    if 'popup' not in game_framework.share:
+    if 'popup' not in game_framework.share :
         game_framework.share['popup'] = Popup()
     game_world.add_object(game_framework.share['popup'], 3)
 
-    if 'girl' not in game_framework.share:
+    if 'girl' not in game_framework.share or game_framework.share['girl'] is None:
         girl = Girl()
         game_framework.share['girl'] = girl
         inv = Inventory(girl)
@@ -55,6 +53,7 @@ def init():
     girl.reset_state()
 
     #girl.state_machine.cur_state = girl.IDLE
+    girl.bg_width = 2400
 
     girl.x, girl.y = 50, 230
     game_world.add_object(girl, 1)
@@ -63,6 +62,27 @@ def init():
     game_world.add_object(stage2_background, 0)
     game_framework.share['background'] = stage2_background
     stage2_background.set_center_object(girl)
+
+    if 'inventory_ui' in game_framework.share:
+        game_world.add_object(game_framework.share['inventory_ui'], 3)
+    else:
+        inv = Inventory(girl)
+        game_framework.share['inventory_ui'] = inv
+        game_world.add_object(inv, 3)
+
+    if 'hp' in game_framework.share:
+        game_world.add_object(game_framework.share['hp'], 3)
+    else:
+        hp = Bar('hp')
+        game_framework.share['hp'] = hp
+        game_world.add_object(hp, 3)
+
+    if 'mp' in game_framework.share:
+        game_world.add_object(game_framework.share['mp'], 3)
+    else:
+        mp = Bar('mp')
+        game_framework.share['mp'] = mp
+        game_world.add_object(mp, 3)
 
     game_world.add_object(game_framework.share['inventory_ui'], 3)
     game_world.add_object(game_framework.share['hp'], 3)

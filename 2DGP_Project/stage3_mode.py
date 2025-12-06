@@ -13,18 +13,7 @@ import logo_mode
 
 girl = None
 boss = None
-
-def handle_events():
-    event_list = get_events()
-    for event in event_list:
-        if event.type == SDL_QUIT:
-            game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
-        else:
-            if 'girl' in game_framework.share:
-                game_framework.share['girl'].handle_event(event)
-
+clear_timer = 0
 
 def init():
     global girl
@@ -47,6 +36,7 @@ def init():
 
     girl.reset_collision_info()
     girl.reset_state()
+    girl.bg_width = 1200
 
     girl.x, girl.y = 100, 100
     girl.face_dir = 1
@@ -78,10 +68,22 @@ def init():
 
     game_world.add_collision_pair('tang:boss', None, boss)
 
+def handle_events():
+    event_list = get_events()
+    for event in event_list:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            game_framework.quit()
+        else:
+            if 'girl' in game_framework.share:
+                game_framework.share['girl'].handle_event(event)
+
 def update():
     game_world.update()
     game_world.handle_collisions()
 
+    global clear_timer
     boss_die = False
     for obj in game_world.world[1]:
         if isinstance(obj, Boss):  # 보스가 있다면
@@ -90,7 +92,10 @@ def update():
 
     if not boss_die:
         print("clear")
-        game_framework.change_mode(logo_mode)
+        clear_timer += game_framework.frame_time
+        if clear_timer >=2.0:
+            print("스테이지3 클리어! 로고 모드로 이동")
+            game_framework.change_mode(logo_mode)
 
 
 def draw():
