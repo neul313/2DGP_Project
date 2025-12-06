@@ -10,7 +10,10 @@ image_index = 0
 timer = 0
 
 def init():
-    global images, image_index, timer
+    global images, image_index, timer, bgm
+    bgm = load_music('sound/크레딧 bgm.ogg')
+    bgm.set_volume(32)
+    bgm.repeat_play()
 
     images = []
     for file in IMAGE_FILES:
@@ -22,10 +25,14 @@ def init():
 
 
 def finish():
-    global images
+    global images, bgm
     for img in images:
         del img
     images = []
+
+    if bgm:
+        bgm.stop()
+        del bgm
 
 
 def update():

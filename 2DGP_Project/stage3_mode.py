@@ -15,7 +15,7 @@ import last
 
 girl = None
 boss = None
-
+bgm = None
 
 def init():
     global girl, boss
@@ -127,8 +127,11 @@ def draw():
 
 def finish():
     game_world.clear()
-    global boss
+    global boss, bgm
     boss = None
+    if bgm:
+        bgm.stop()  # 음악 정지
+        del bgm
 
 def pause():
     pass

@@ -111,3 +111,10 @@ class Boss:
     def get_bb(self):
         return self.x - 170, self.y - 170, self.x + 170, self.y + 170
 
+    def finish(self):
+        global bgm
+
+        if bgm:
+            bgm.stop()
+            del bgm
+        game_world.clear()

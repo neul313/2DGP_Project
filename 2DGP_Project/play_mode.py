@@ -16,6 +16,7 @@ girl = None
 inventory_ui = None
 hp = None
 mp = None
+bgm = None
 
 def handle_events():
     event_list = get_events()
@@ -28,9 +29,13 @@ def handle_events():
             game_framework.share['girl'].handle_event(event)
 
 def init():
-    global girl
+    global girl, bgm
     #import stage2_mode
     import illust
+
+    bgm = load_music('sound/타이틀 bgm.ogg')
+    bgm.set_volume(32)
+    bgm.repeat_play()
 
     popup = Popup()
     game_framework.share['popup'] = popup
@@ -129,8 +134,12 @@ def draw():
 
 
 def finish():
+    global bgm
+
+    if bgm:
+        bgm.stop()
+        del bgm
     game_world.clear()
-    pass
 
 def pause(): pass
 def resume(): pass

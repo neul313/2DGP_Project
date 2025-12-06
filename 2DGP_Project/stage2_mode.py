@@ -28,9 +28,13 @@ def handle_events():
 
 
 def init():
-    global girl
+    global girl, bgm
     global door_bridge
     game_world.clear()
+
+    bgm = load_music('sound/1챕터-bgm.ogg')
+    bgm.set_volume(32)
+    bgm.repeat_play()
 
     if 'popup' not in game_framework.share :
         game_framework.share['popup'] = Popup()
@@ -140,6 +144,10 @@ def draw():
 
 
 def finish():
+    global bgm
+    if bgm:
+        bgm.stop()
+        del bgm
     game_world.clear()
 
 def pause():

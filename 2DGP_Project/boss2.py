@@ -26,6 +26,11 @@ class Boss:
             Boss.hp_images = {}
             for i in range(11):
                 Boss.hp_images[i] = load_image(f'hp_boss1/{i}.png')
+        global bgm
+
+        bgm = load_music('sound/2챕터 bgm.ogg')
+        bgm.set_volume(32)
+        bgm.repeat_play()
 
         self.x, self.y = x, y
 
@@ -58,7 +63,7 @@ class Boss:
             (361, 103, 70, 57), (443, 103, 73, 50),
 
             # 5번째 줄 (피격/쓰러짐) - DEAD
-            (20, 25, 60, 54), (91, 25, 56, 52), (160, 25, 85, 42), (266, 25, 90, 32)
+            (20, 25, 60, 54), (103, 25, 68, 52), (181, 25, 95, 42), (288, 25, 380, 40)
         ]
 
         self.timer = 0
