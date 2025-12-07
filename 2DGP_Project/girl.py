@@ -193,7 +193,7 @@ class Girl:
         b -= game_framework.camera_y
         r -= game_framework.camera_x
         t -= game_framework.camera_y
-        draw_rectangle(l, b, r, t)
+        #draw_rectangle(l, b, r, t)
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN:
@@ -355,35 +355,25 @@ class Girl:
                 return
 
     def handle_collision(self, group, other):
-        import stage3_mode
         import logo_mode
-        import stage2_boss
-
 
         if group == 'missile:girl':
-            # [수정] 무적 시간 확인: 타이머가 0일 때만 대미지
             if self.invincible_timer <= 0:
                 print("hit")
                 self.hp -= 10
                 self.invincible_timer = 1.0  # 1초간 무적
 
                 if self.hp <= 0:
-                    print("Game Over")
+                    print("Game Over - Resetting Game")
 
-                    game_framework.share['inventory'] = self.inventory
-                    game_framework.share['inventory_size'] = self.inventory_size
-                    game_framework.share['is_bag'] = self.is_bag
-                    game_framework.share['is_second_bag'] = self.is_second_bag
+                    # 사망 시 모든 데이터를 삭제, 초기화
+                    keys_to_remove = ['girl', 'inventory', 'inventory_size', 'is_bag', 'is_second_bag',
+                                      'hp', 'mp', 'inventory_ui']
+                    for key in keys_to_remove:
+                        if key in game_framework.share:
+                            del game_framework.share[key]
 
-                    # [수정 중요] 모드 변경 전에 HP를 80으로 채워둡니다!
-                    self.hp = 80
-
-                    if game_framework.stack[-1] == stage3_mode:
-                        game_framework.change_mode(logo_mode)
-                    else:
-                        game_framework.change_mode(logo_mode)
-
-                    # 이미 모드를 바꿨으니 더 이상 처리하지 않도록 리턴
+                    game_framework.change_mode(logo_mode)
                     return
 
         elif group == 'girl:item':
@@ -393,6 +383,7 @@ class Girl:
             if other.door_id == 0:
                 print("포탈 진입")
                 if other.stage:
+                    # 스테이지 이동 시에는 데이터 보존
                     game_framework.share['inventory'] = self.inventory
                     game_framework.share['inventory_size'] = self.inventory_size
                     game_framework.share['is_bag'] = self.is_bag
@@ -401,9 +392,15 @@ class Girl:
                 return
             self.door_collision = other
             left, bottom, right, top = other.get_bb()
-            if self.face_dir > 0:
+            # if self.face_dir > 0:
+            #     self.x = left - 50
+            # else:
+            #     self.x = right + 50
+            if self.x < other.x:
+                # 플레이어가 문보다 왼쪽에 있으면 -> 문의 왼쪽 벽에 고정
                 self.x = left - 50
             else:
+                # 플레이어가 문보다 오른쪽에 있으면 -> 문의 오른쪽 벽에 고정
                 self.x = right + 50
 
         elif group == 'boss:girl':
@@ -411,22 +408,17 @@ class Girl:
                 self.hp -= 10
                 self.no_attack_timer = 1.0
                 if self.hp <= 0:
-                    print("Game Over")
+                    print("Game Over - Resetting Game")
 
-                    game_framework.share['inventory'] = self.inventory
-                    game_framework.share['inventory_size'] = self.inventory_size
-                    game_framework.share['is_bag'] = self.is_bag
-                    game_framework.share['is_second_bag'] = self.is_second_bag
+                    # 사망 시 모든 데이터를 삭제, 초기화
+                    keys_to_remove = ['girl', 'inventory', 'inventory_size', 'is_bag', 'is_second_bag',
+                                      'hp', 'mp', 'inventory_ui']
+                    for key in keys_to_remove:
+                        if key in game_framework.share:
+                            del game_framework.share[key]
 
-                    # [수정 중요] 모드 변경 전에 HP를 80으로 채워둡니다!
-                    self.hp = 80
-
-                    if game_framework.stack[-1] == stage3_mode:
-                        game_framework.change_mode(logo_mode)
-                    else:
-                        game_framework.change_mode(logo_mode)
+                    game_framework.change_mode(logo_mode)
                     return
-
     def get_bb(self):
         return self.x - 35, self.y - 50, self.x + 50, self.y + 50
 

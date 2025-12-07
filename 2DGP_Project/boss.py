@@ -61,7 +61,7 @@ class Boss:
         b -= game_framework.camera_y
         r -= game_framework.camera_x
         t -= game_framework.camera_y
-        draw_rectangle(l, b, r, t)
+        #draw_rectangle(l, b, r, t)
 
 
     def handle_event(self,e):
@@ -106,7 +106,7 @@ class Boss:
         x=cx
         y=cy + 270
 
-        draw_rectangle(x - bar_x, y , x+bar_x, y + 25)
+        #draw_rectangle(x - bar_x, y , x+bar_x, y + 25)
 
     def get_bb(self):
         return self.x - 170, self.y - 170, self.x + 170, self.y + 170

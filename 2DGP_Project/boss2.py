@@ -149,7 +149,7 @@ class Boss:
         b -= game_framework.camera_y
         r -= game_framework.camera_x
         t -= game_framework.camera_y
-        draw_rectangle(l, b, r, t)
+        #draw_rectangle(l, b, r, t)
 
     def handle_collision(self, group, other):
         if group == 'tang:boss':

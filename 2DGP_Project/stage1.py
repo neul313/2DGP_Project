@@ -4,7 +4,10 @@ import play_mode
 
 class Stage1:
     def __init__(self):
-        self.image = load_image('stage_1.png')
+        self.images = ['stage1_bg/1.png','stage1_bg/2.png','stage1_bg/3.png','stage1_bg/4.png' ]
+        self.images_index = 0
+
+        self.image = load_image(self.images[self.images_index])
 
         self.canvas_width = 1200
         self.canvas_height = 700
@@ -19,6 +22,10 @@ class Stage1:
 
         self.center_object = None
 
+    def change_background(self):
+        self.images_index = (self.images_index + 1) % len(self.images)
+        self.image = load_image(self.images[self.images_index])
+        print(f"[Stage1] 배경 변경됨: {self.images[self.images_index]}")
 
     def update(self):
         if self.center_object is None:

@@ -104,13 +104,13 @@ class Item:
             center_y = draw_y
             half_w = 40
             half_h = 40
-            draw_rectangle (center_x - half_w, center_y - half_h, center_x + half_w, center_y + half_h)
+            #draw_rectangle (center_x - half_w, center_y - half_h, center_x + half_w, center_y + half_h)
         else:
             center_x = draw_x
             center_y = draw_y
             half_w = 50 / 2
             half_h = 50 / 2
-            draw_rectangle (center_x - half_w, center_y - half_h, center_x + half_w, center_y + half_h)
+            #draw_rectangle (center_x - half_w, center_y - half_h, center_x + half_w, center_y + half_h)
 
 
 

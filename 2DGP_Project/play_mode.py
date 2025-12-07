@@ -53,6 +53,7 @@ def init():
     stage1 = Stage1()
     game_world.add_object(stage1, 0)
     stage1.set_center_object(girl)
+    game_framework.share['background'] = stage1
 
     game_world.add_collision_pair('girl:item', girl, None)
 

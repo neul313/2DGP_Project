@@ -33,13 +33,20 @@ def finish():
     if bgm:
         bgm.stop()
         del bgm
+    print("게임 클리어, 데이터 초기화")
+    keys_to_remove = ['girl', 'inventory', 'inventory_size', 'is_bag', 'is_second_bag',
+                      'hp', 'mp', 'inventory_ui', 'background', 'popup']
+
+    for key in keys_to_remove:
+        if key in game_framework.share:
+            del game_framework.share[key]
 
 
 def update():
     global timer, image_index
     timer += game_framework.frame_time
 
-    if timer > 2.0:
+    if timer > 5.0:
         timer = 0  # 타이머 리셋
         image_index += 1  # 다음 장으로
 

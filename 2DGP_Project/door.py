@@ -19,7 +19,7 @@ class Door:
     def draw(self):
         draw_x = self.x - game_framework.camera_x
         draw_y = self.y - game_framework.camera_y
-        draw_rectangle(draw_x - 50, draw_y - 50, draw_x +50, draw_y+300)
+        #draw_rectangle(draw_x - 50, draw_y - 50, draw_x +50, draw_y+300)
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 300

@@ -2,7 +2,7 @@ from pico2d import *
 import game_framework
 import game_world
 
-IMAGE_FILES = ['story_image/설명1.png', 'story_image/설명2.png']
+IMAGE_FILES = ['story_image/키설명.png','story_image/설명1.png', 'story_image/설명2.png']
 
 images = []
 image_index = 0
@@ -31,7 +31,7 @@ def update():
     global timer, image_index
     timer += game_framework.frame_time
 
-    if timer > 2.0:
+    if timer > 10.0:
         timer = 0  # 타이머 리셋
         image_index += 1  # 다음 장으로
 
